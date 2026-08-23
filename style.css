@@ -312,3 +312,94 @@ button {
     }
 
   }
+
+
+/* ==========================================
+   EDIT PANEL
+   ========================================== */
+
+.edit-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 15px;
+
+    z-index: 9999;
+}
+
+.edit-panel {
+    width: 100%;
+    max-width: 400px;
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.edit-panel h2 {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.edit-panel label {
+    display: block;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    margin-top: 12px;
+    margin-bottom: 5px;
+}
+
+.edit-panel input,
+.edit-panel select {
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    background: #fafafa;
+}
+
+.edit-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.edit-actions button {
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 12px;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    background: #eee7da;
+}
+
+.edit-actions button:first-child {
+    background: #333;
+    color: #fff;
+}
