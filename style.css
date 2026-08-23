@@ -1258,3 +1258,130 @@ button {
     font-size: 15px;
 }
 
+
+/* ==========================================
+   TENANT INFORMATION
+   ========================================== */
+
+.tenant-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: #f5f1e8;
+
+    z-index: 10004;
+
+    overflow-y: auto;
+}
+
+.tenant-panel {
+    width: 100%;
+    max-width: 600px;
+
+    min-height: 100vh;
+
+    margin: auto;
+
+    padding: 15px;
+}
+
+.tenant-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.tenant-header h2 {
+    font-size: 19px;
+}
+
+.tenant-header button {
+    border: none;
+
+    background: #ffffff;
+
+    padding: 9px 12px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+}
+
+.tenant-panel > h3 {
+    text-align: center;
+
+    margin-bottom: 15px;
+}
+
+.tenant-form {
+    background: #ffffff;
+
+    border-radius: 13px;
+
+    padding: 18px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.10);
+}
+
+.tenant-form label {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    margin-top: 12px;
+
+    margin-bottom: 5px;
+}
+
+.tenant-form input {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    background: #fafafa;
+}
+
+.tenant-buttons {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.tenant-buttons button {
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 12px;
+
+    font-size: 14px;
+
+    background: #eee7da;
+}
+
+.tenant-buttons button:first-child {
+    background: #333;
+
+    color: #ffffff;
+}
+
+
+
+
