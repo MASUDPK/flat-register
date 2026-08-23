@@ -1803,5 +1803,339 @@ function closeRentForm() {
 
             }
 
+// ==========================================
+// RECEIPT SYSTEM
+// ==========================================
+
+function openReceipt() {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data = flatData[flatName];
+
+    if (!data) {
+        alert("Flat data not found.");
+        return;
+    }
+
+    if (!Array.isArray(data.otherBills)) {
+        data.otherBills = [];
+    }
+
+    const otherTotal =
+        data.otherBills.reduce(
+            (sum, bill) => sum + (Number(bill.amount) || 0),
+            0
+        );
+
+    const rent =
+        Number(data.rent) || 0;
+
+    const total =
+        rent + otherTotal;
+
+    const receiptDate =
+        new Date().toLocaleDateString("en-GB");
+
+
+    const box = document.createElement("div");
+
+    box.id = "receiptBox";
+
+    box.innerHTML = `
+
+        <div class="receipt-overlay">
+
+            <div class="receipt-panel">
+
+                <div class="receipt-top">
+
+                    <button onclick="closeReceipt()">
+                        ← Back
+                    </button>
+
+                    <h2>Receipt</h2>
+
+                    <span></span>
+
+                </div>
+
+
+                <div id="receiptContent">
+
+                    <div class="receipt-paper">
+
+                        <h1>JAMILA BHAVAN</h1>
+
+                        <h3>RENT & BILL RECEIPT</h3>
+
+                        <div class="receipt-line"></div>
+
+
+                        <div class="receipt-row">
+                            <span>Flat</span>
+                            <strong>
+                                ${escapeHTML(data.flat)}
+                            </strong>
+                        </div>
+
+
+                        <div class="receipt-row">
+                            <span>Tenant</span>
+                            <strong>
+                                ${escapeHTML(data.tenant || "No Tenant")}
+                            </strong>
+                        </div>
+
+
+                        <div class="receipt-row">
+                            <span>Date</span>
+                            <strong>
+                                ${receiptDate}
+                            </strong>
+                        </div>
+
+
+                        <div class="receipt-line"></div>
+
+
+                        <div class="receipt-row">
+                            <span>Rent</span>
+                            <strong>
+                                ৳${rent.toLocaleString()}
+                            </strong>
+                        </div>
+
+
+                        <h4 class="receipt-subtitle">
+                            Other Bills
+                        </h4>
+
+
+                        ${
+                            data.otherBills.length > 0
+                            ?
+                            data.otherBills.map(bill => `
+                                <div class="receipt-row">
+                                    <span>
+                                        ${escapeHTML(bill.name)}
+                                    </span>
+
+                                    <strong>
+                                        ৳${Number(bill.amount).toLocaleString()}
+                                    </strong>
+                                </div>
+                            `).join("")
+                            :
+                            `
+                            <div class="receipt-empty">
+                                No Other Bills
+                            </div>
+                            `
+                        }
+
+
+                        <div class="receipt-line"></div>
+
+
+                        <div class="receipt-total">
+
+                            <span>TOTAL</span>
+
+                            <strong>
+                                ৳${total.toLocaleString()}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="receipt-status">
+
+                            ${
+                                data.status === "PAID"
+                                ? "🟢 PAID"
+                                : data.status === "DUE"
+                                ? "🔴 DUE"
+                                : "⚪ VACANT"
+                            }
+
+                        </div>
+
+
+                        <div class="receipt-footer">
+
+                            Thank you
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="receipt-actions">
+
+                    <button
+                        onclick="sendReceiptWhatsApp()">
+
+                        📱 WhatsApp
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(box);
+}
+
+
+// ==========================================
+// WHATSAPP RECEIPT
+// ==========================================
+
+function sendReceiptWhatsApp() {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data = flatData[flatName];
+
+    if (!data) {
+        alert("Flat data not found.");
+        return;
+    }
+
+
+    const rent =
+        Number(data.rent) || 0;
+
+
+    const otherTotal =
+        Array.isArray(data.otherBills)
+        ?
+        data.otherBills.reduce(
+            (sum, bill) =>
+                sum + (Number(bill.amount) || 0),
+            0
+        )
+        :
+        0;
+
+
+    const total =
+        rent + otherTotal;
+
+
+    const date =
+        new Date().toLocaleDateString("en-GB");
+
+
+    let message = "";
+
+    message += "🏢 *JAMILA BHAVAN*%0A";
+    message += "🧾 *RENT & BILL RECEIPT*%0A";
+    message += "--------------------------%0A";
+
+    message +=
+        "Flat: " +
+        (data.flat || "") +
+        "%0A";
+
+    message +=
+        "Tenant: " +
+        (data.tenant || "No Tenant") +
+        "%0A";
+
+    message +=
+        "Date: " +
+        date +
+        "%0A";
+
+    message += "--------------------------%0A";
+
+    message +=
+        "Rent: ৳" +
+        rent.toLocaleString() +
+        "%0A";
+
+
+    if (
+        Array.isArray(data.otherBills) &&
+        data.otherBills.length > 0
+    ) {
+
+        message += "%0A*Other Bills*%0A";
+
+        data.otherBills.forEach(bill => {
+
+            message +=
+                bill.name +
+                ": ৳" +
+                Number(bill.amount).toLocaleString() +
+                "%0A";
+
+        });
+
+    }
+
+
+    message += "--------------------------%0A";
+
+    message +=
+        "*TOTAL: ৳" +
+        total.toLocaleString() +
+        "*%0A";
+
+
+    if (data.status === "PAID") {
+
+        message += "🟢 PAID%0A";
+
+    }
+
+    else if (data.status === "DUE") {
+
+        message += "🔴 DUE%0A";
+
+    }
+
+
+    message += "--------------------------%0A";
+    message += "Thank you.";
+
+
+    const whatsappURL =
+        "https://wa.me/?text=" + message;
+
+
+    window.location.href =
+        whatsappURL;
+}
+
+
+// ==========================================
+// CLOSE RECEIPT
+// ==========================================
+
+function closeReceipt() {
+
+    const box =
+        document.getElementById("receiptBox");
+
+    if (box) {
+        box.remove();
+    }
+
+}
+
+
+
+
+
 
 
