@@ -349,14 +349,164 @@ function updateDashboard() {
 // EDIT MODE
 // ==========================================
 
+// ==========================================
+// EDIT SYSTEM
+// ==========================================
+
+let selectedFlatForEdit = null;
+
 function toggleEditMode() {
 
-    alert(
-        "Edit system will be added in the next step."
-    );
+    // যদি Flat Details থেকে Edit চাপা হয়
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    selectedFlatForEdit = flatName;
+
+    const data = flatData[flatName];
+
+    if (!data) {
+        alert("Flat data not found.");
+        return;
+    }
+
+    // Edit Box তৈরি
+    const editBox = document.createElement("div");
+
+    editBox.id = "editBox";
+
+    editBox.innerHTML = `
+        <div class="edit-overlay">
+
+            <div class="edit-panel">
+
+                <h2>Edit ${data.flat}</h2>
+
+                <label>Tenant Name</label>
+                <input
+                    type="text"
+                    id="editTenant"
+                    value="${data.tenant}"
+                    placeholder="Tenant name"
+                >
+
+                <label>Rent</label>
+                <input
+                    type="number"
+                    id="editRent"
+                    value="${data.rent || ""}"
+                    placeholder="Rent amount"
+                >
+
+                <label>Other Bill</label>
+                <input
+                    type="number"
+                    id="editOther"
+                    value="${data.other || ""}"
+                    placeholder="Other bill amount"
+                >
+
+                <label>Status</label>
+
+                <select id="editStatus">
+
+                    <option value="VACANT"
+                        ${data.status === "VACANT" ? "selected" : ""}>
+                        VACANT
+                    </option>
+
+                    <option value="PAID"
+                        ${data.status === "PAID" ? "selected" : ""}>
+                        PAID
+                    </option>
+
+                    <option value="DUE"
+                        ${data.status === "DUE" ? "selected" : ""}>
+                        DUE
+                    </option>
+
+                </select>
+
+                <div class="edit-actions">
+
+                    <button onclick="saveFlatEdit()">
+                        💾 Save
+                    </button>
+
+                    <button onclick="closeEditBox()">
+                        ✖ Cancel
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(editBox);
 
 }
 
+
+// ==========================================
+// SAVE EDITED DATA
+// ==========================================
+
+function saveFlatEdit() {
+
+    const flat =
+        flatData[selectedFlatForEdit];
+
+    if (!flat) {
+        return;
+    }
+
+    flat.tenant =
+        document.getElementById("editTenant").value.trim();
+
+    flat.rent =
+        Number(document.getElementById("editRent").value) || 0;
+
+    flat.other =
+        Number(document.getElementById("editOther").value) || 0;
+
+    flat.status =
+        document.getElementById("editStatus").value;
+
+
+    // ফোনের Storage-এ Save
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    closeEditBox();
+
+    // Table update
+    renderFlatTable();
+
+    // Details update
+    openFlat(selectedFlatForEdit);
+
+}
+
+
+// ==========================================
+// CLOSE EDIT BOX
+// ==========================================
+
+function closeEditBox() {
+
+    const editBox =
+        document.getElementById("editBox");
+
+    if (editBox) {
+        editBox.remove();
+    }
+
+}
 
 // ==========================================
 // FUTURE OPTIONS
