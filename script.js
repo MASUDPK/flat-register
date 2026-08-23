@@ -1048,13 +1048,6 @@ function openOtherBills() {
 }
 
 
-function openReceipt() {
-
-    alert(
-        "Receipt section will be added next."
-    );
-
-}
 
 
 // ==========================================
