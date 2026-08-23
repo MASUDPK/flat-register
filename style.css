@@ -875,3 +875,195 @@ button {
 
     color: #ffffff;
    }
+
+
+/* ==========================================
+   RENT HISTORY
+   ========================================== */
+
+.rent-overlay {
+    position: fixed;
+    inset: 0;
+    background: #f5f1e8;
+    z-index: 10002;
+    overflow-y: auto;
+}
+
+.rent-panel {
+    width: 100%;
+    max-width: 600px;
+    min-height: 100vh;
+    margin: auto;
+    padding: 15px;
+}
+
+.rent-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.rent-header h2 {
+    font-size: 19px;
+}
+
+.rent-header button {
+    border: none;
+    background: #ffffff;
+    padding: 9px 12px;
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+.rent-panel > h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.current-rent-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.07);
+}
+
+.current-rent-box span {
+    color: #777;
+    font-size: 13px;
+}
+
+.current-rent-box strong {
+    font-size: 18px;
+}
+
+.rent-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: #ffffff;
+    border-radius: 11px;
+    padding: 13px;
+    margin-bottom: 9px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.07);
+}
+
+.rent-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rent-info strong {
+    font-size: 15px;
+}
+
+.rent-info span {
+    font-size: 12px;
+    color: #666;
+}
+
+.rent-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rent-paid {
+    color: #16803c;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.rent-due {
+    color: #c62828;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.delete-rent-btn {
+    border: none;
+    background: #f8dddd;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.empty-rent {
+    background: #ffffff;
+    border-radius: 11px;
+    padding: 18px;
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+}
+
+.add-rent-btn {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background: #333;
+    color: #ffffff;
+    padding: 13px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.rent-form {
+    margin-top: 15px;
+    background: #ffffff;
+    border-radius: 13px;
+    padding: 17px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+.rent-form h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.rent-form label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.rent-form input,
+.rent-form select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fafafa;
+}
+
+.rent-form-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-top: 15px;
+}
+
+.rent-form-buttons button {
+    border: none;
+    border-radius: 9px;
+    padding: 11px;
+    font-size: 14px;
+    background: #eee7da;
+}
+
+.rent-form-buttons button:first-child {
+    background: #333;
+    color: #ffffff;
+                               }
+
+
+
+
