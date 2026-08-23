@@ -1067,3 +1067,194 @@ button {
 
 
 
+
+/* ==========================================
+   RECEIPT
+   ========================================== */
+
+.receipt-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: #f5f1e8;
+
+    z-index: 10003;
+
+    overflow-y: auto;
+}
+
+.receipt-panel {
+    width: 100%;
+    max-width: 600px;
+
+    min-height: 100vh;
+
+    margin: auto;
+
+    padding: 15px;
+}
+
+.receipt-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.receipt-top h2 {
+    font-size: 19px;
+}
+
+.receipt-top button {
+    border: none;
+
+    background: #ffffff;
+
+    padding: 9px 12px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+}
+
+
+/* RECEIPT PAPER */
+
+.receipt-paper {
+    background: #ffffff;
+
+    padding: 22px 17px;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.10);
+}
+
+.receipt-paper h1 {
+    text-align: center;
+
+    font-size: 20px;
+
+    margin-bottom: 5px;
+}
+
+.receipt-paper h3 {
+    text-align: center;
+
+    font-size: 13px;
+
+    color: #777;
+
+    margin-bottom: 15px;
+}
+
+.receipt-line {
+    border-top: 1px dashed #bbb;
+
+    margin: 12px 0;
+}
+
+.receipt-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 6px 0;
+
+    font-size: 13px;
+}
+
+.receipt-row span {
+    color: #555;
+
+    word-break: break-word;
+}
+
+.receipt-row strong {
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+.receipt-subtitle {
+    margin-top: 10px;
+
+    margin-bottom: 5px;
+
+    font-size: 13px;
+}
+
+.receipt-empty {
+    font-size: 12px;
+
+    color: #888;
+
+    padding: 5px 0;
+}
+
+
+/* TOTAL */
+
+.receipt-total {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    padding: 10px 0;
+}
+
+.receipt-status {
+    text-align: center;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    margin-top: 8px;
+}
+
+.receipt-footer {
+    text-align: center;
+
+    color: #777;
+
+    font-size: 12px;
+
+    margin-top: 20px;
+}
+
+
+/* ACTION */
+
+.receipt-actions {
+    margin-top: 12px;
+}
+
+.receipt-actions button {
+    width: 100%;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #333;
+
+    color: #ffffff;
+
+    padding: 13px;
+
+    font-size: 15px;
+}
+
