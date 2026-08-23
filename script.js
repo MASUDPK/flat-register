@@ -230,112 +230,94 @@ function renderFlatTable() {
         // PAYMENT STATUS
         // ======================================
 
-        const statusCell =
-            document.createElement("td");
-
-
-        let currentStatus;
-
-
-        // --------------------------------------
-        // 1. No Tenant = VACANT
-        // --------------------------------------
-
-        if (!data.tenant || data.tenant.trim() === "") {
-
-            currentStatus = "VACANT";
-
-        }
-
-
-        // --------------------------------------
-        // 2. Tenant আছে
-        // --------------------------------------
-
-        else {
-
-            let currentRentPaid = false;
-
-
-            // Rent History আছে কিনা
-            if (Array.isArray(data.rentHistory)) {
-
-                const currentRent =
-                    data.rentHistory.find(
-                        item =>
-                            item.month === currentMonth
-                    );
-
-
-                if (
-                    currentRent &&
-                    currentRent.status === "PAID"
-                ) {
-
-                    currentRentPaid = true;
-
-                }
-
-            }
-
-
-            // ----------------------------------
-            // Current Month Paid
-            // ----------------------------------
-
-            if (currentRentPaid) {
-
-                currentStatus = "PAID";
-
-            }
-
-            // ----------------------------------
-            // Current Month Not Paid
-            // ----------------------------------
-
-            else {
-
-                currentStatus = "DUE";
-
-            }
-
-        }
-
-
         // ======================================
-        // SHOW STATUS
-        // ======================================
+// PAYMENT STATUS
+// ======================================
 
-        if (currentStatus === "PAID") {
+const currentMonth =
+    new Date().toISOString().slice(0, 7);
 
-            statusCell.textContent =
-                "🟢 PAID";
+let currentStatus = "VACANT";
 
-            statusCell.className =
-                "status-paid";
+
+// ======================================
+// NO TENANT = VACANT
+// ======================================
+
+if (
+    data.tenant &&
+    data.tenant.trim() !== ""
+) {
+
+    currentStatus = "DUE";
+
+
+    // ==================================
+    // CHECK CURRENT MONTH RENT
+    // ==================================
+
+    if (Array.isArray(data.rentHistory)) {
+
+        const currentRent =
+            data.rentHistory.find(
+                item =>
+                    item.month === currentMonth
+            );
+
+
+        if (
+            currentRent &&
+            currentRent.status === "PAID"
+        ) {
+
+            currentStatus = "PAID";
 
         }
 
-        else if (currentStatus === "DUE") {
+    }
 
-            statusCell.textContent =
-                "🔴 DUE";
+}
 
-            statusCell.className =
-                "status-due";
 
-        }
+// ======================================
+// SHOW STATUS
+// ======================================
 
-        else {
+if (currentStatus === "PAID") {
 
-            statusCell.textContent =
-                "⚪ VACANT";
+    statusCell.textContent =
+        "🟢 PAID";
 
-            statusCell.className =
-                "status-vacant";
+    statusCell.className =
+        "status-paid";
 
-        }
+}
 
+else if (currentStatus === "DUE") {
+
+    statusCell.textContent =
+        "🔴 DUE";
+
+    statusCell.className =
+        "status-due";
+
+}
+
+else {
+
+    statusCell.textContent =
+        "⚪ VACANT";
+
+    statusCell.className =
+        "status-vacant";
+
+}
+
+
+// Save calculated status
+
+data.status =
+    currentStatus;
 
         // ======================================
         // SAVE CURRENT STATUS
