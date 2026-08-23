@@ -512,11 +512,204 @@ function closeEditBox() {
 // FUTURE OPTIONS
 // ==========================================
 
+// ==========================================
+// TENANT INFORMATION
+// ==========================================
+
 function openTenant() {
 
-    alert(
-        "Tenant section will be added next."
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data = flatData[flatName];
+
+    if (!data) {
+        alert("Flat data not found.");
+        return;
+    }
+
+    const box = document.createElement("div");
+
+    box.id = "tenantBox";
+
+    box.innerHTML = `
+        <div class="tenant-overlay">
+
+            <div class="tenant-panel">
+
+                <div class="tenant-header">
+
+                    <button onclick="closeTenant()">
+                        ← Back
+                    </button>
+
+                    <h2>Tenant</h2>
+
+                    <span></span>
+
+                </div>
+
+                <h3>${escapeHTML(data.flat)}</h3>
+
+                <div class="tenant-form">
+
+                    <label>Tenant Name</label>
+
+                    <input
+                        type="text"
+                        id="tenantName"
+                        value="${escapeHTML(data.tenant || "")}"
+                        placeholder="Tenant name"
+                    >
+
+                    <label>Mobile Number</label>
+
+                    <input
+                        type="tel"
+                        id="tenantPhone"
+                        value="${escapeHTML(data.tenantPhone || "")}"
+                        placeholder="Mobile number"
+                        inputmode="tel"
+                    >
+
+                    <label>Identity</label>
+
+                    <input
+                        type="text"
+                        id="tenantIdentity"
+                        value="${escapeHTML(data.tenantIdentity || "")}"
+                        placeholder="NID / Passport / Other"
+                    >
+
+                    <label>Joining Date</label>
+
+                    <input
+                        type="date"
+                        id="tenantJoinDate"
+                        value="${data.tenantJoinDate || ""}"
+                    >
+
+                    <div class="tenant-buttons">
+
+                        <button onclick="saveTenant()">
+                            💾 Save
+                        </button>
+
+                        <button onclick="closeTenant()">
+                            ✖ Cancel
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(box);
+}
+
+
+// ==========================================
+// SAVE TENANT
+// ==========================================
+
+function saveTenant() {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data =
+        flatData[flatName];
+
+    if (!data) {
+        return;
+    }
+
+    const name =
+        document.getElementById("tenantName").value.trim();
+
+    const phone =
+        document.getElementById("tenantPhone").value.trim();
+
+    const identity =
+        document.getElementById("tenantIdentity").value.trim();
+
+    const joinDate =
+        document.getElementById("tenantJoinDate").value;
+
+
+    if (!name) {
+
+        alert("Please enter tenant name.");
+
+        return;
+    }
+
+
+    data.tenant = name;
+
+    data.tenantPhone = phone;
+
+    data.tenantIdentity = identity;
+
+    data.tenantJoinDate = joinDate;
+
+    // Tenant থাকলে Flat আর Vacant থাকবে না
+    if (data.status === "VACANT") {
+        data.status = "DUE";
+    }
+
+
+    // ফোনের Storage-এ Save
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
     );
+
+
+    // Details screen update
+    document
+        .getElementById("detailsTenantName")
+        .textContent = data.tenant;
+
+
+    const statusElement =
+        document.getElementById("detailsStatus");
+
+
+    if (data.status === "PAID") {
+
+        statusElement.textContent = "🟢 PAID";
+
+    } else {
+
+        statusElement.textContent = "🔴 DUE";
+
+    }
+
+
+    closeTenant();
+
+    renderFlatTable();
+
+}
+
+
+// ==========================================
+// CLOSE TENANT
+// ==========================================
+
+function closeTenant() {
+
+    const box =
+        document.getElementById("tenantBox");
+
+    if (box) {
+        box.remove();
+    }
 
 }
 
