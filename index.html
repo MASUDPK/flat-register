@@ -1,1 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Flat Register</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================================= -->
+    <!-- APP HEADER -->
+    <!-- ================================= -->
+
+    <header class="app-header">
+        <h1>🏢 Flat Register</h1>
+        <p>Tenant & Rent Management</p>
+    </header>
+
+
+    <!-- ================================= -->
+    <!-- MAIN SCREEN -->
+    <!-- ================================= -->
+
+    <main id="mainScreen">
+
+        <!-- Dashboard -->
+        <section class="dashboard">
+
+            <button class="dashboard-card" onclick="showFlatList()">
+                <span class="card-icon">🏢</span>
+                <span class="card-title">Flat List</span>
+                <span class="card-value">28 Flats</span>
+            </button>
+
+            <div class="dashboard-card">
+                <span class="card-icon">🟢</span>
+                <span class="card-title">Paid</span>
+                <span class="card-value" id="paidCount">0</span>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="card-icon">🔴</span>
+                <span class="card-title">Due</span>
+                <span class="card-value" id="dueCount">0</span>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="card-icon">⚪</span>
+                <span class="card-title">Vacant</span>
+                <span class="card-value" id="vacantCount">28</span>
+            </div>
+
+        </section>
+
+
+        <!-- ================================= -->
+        <!-- FLAT LIST -->
+        <!-- ================================= -->
+
+        <section id="flatListScreen" class="screen hidden">
+
+            <div class="screen-header">
+
+                <button class="back-btn" onclick="goHome()">
+                    ← Back
+                </button>
+
+                <h2>Flat List</h2>
+
+                <button class="edit-btn" onclick="toggleEditMode()">
+                    ✏️ Edit
+                </button>
+
+            </div>
+
+
+            <!-- Flat Table -->
+
+            <div class="table-container">
+
+                <table id="flatTable">
+
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Flat</th>
+                            <th>Tenant</th>
+                            <th>Rent</th>
+                            <th>Other</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="flatTableBody">
+                        <!-- JavaScript will create 28 flats here -->
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================= -->
+        <!-- FLAT DETAILS -->
+        <!-- ================================= -->
+
+        <section id="flatDetailsScreen" class="screen hidden">
+
+            <div class="screen-header">
+
+                <button class="back-btn" onclick="showFlatList()">
+                    ← Back
+                </button>
+
+                <h2 id="detailsFlatName">Flat</h2>
+
+            </div>
+
+
+            <!-- Selected Flat -->
+
+            <div class="flat-details">
+
+                <h3 id="detailsTenantName">
+                    No Tenant
+                </h3>
+
+                <p id="detailsStatus">
+                    ⚪ Vacant
+                </p>
+
+
+                <!-- Detail Options -->
+
+                <div class="detail-buttons">
+
+                    <button onclick="openTenant()">
+                        👤 Tenant
+                    </button>
+
+                    <button onclick="openHistory()">
+                        📜 History
+                    </button>
+
+                    <button onclick="openRent()">
+                        💰 Rent
+                    </button>
+
+                    <button onclick="openOtherBills()">
+                        🧾 Other Bills
+                    </button>
+
+                    <button onclick="openReceipt()">
+                        🧾 Receipt
+                    </button>
+
+                    <button onclick="toggleEditMode()">
+                        ✏️ Edit
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ================================= -->
+
+    <script src="script.js"></script>
+
+</body>
+  </html>
