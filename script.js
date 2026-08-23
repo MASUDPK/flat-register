@@ -560,48 +560,86 @@ function toggleEditMode() {
 // SAVE EDITED DATA
 // ==========================================
 
+// ==========================================
+// SAVE EDITED DATA
+// ==========================================
+
 function saveFlatEdit() {
 
+    // Get Flat directly from Details screen
+    const flatName =
+        document.getElementById("detailsFlatName").textContent.trim();
+
     const flat =
-        flatData[selectedFlatForEdit];
+        flatData[flatName];
 
     if (!flat) {
-        alert("Flat data not found.");
+        alert("Flat data not found: " + flatName);
         return;
     }
 
-    // Tenant Name
-    flat.tenant =
-        document.getElementById("editTenant")
-        .value
-        .trim();
 
-    // Rent
-    flat.rent =
-        Number(
-            document.getElementById("editRent").value
-        ) || 0;
+    // ======================================
+    // TENANT NAME
+    // ======================================
+
+    const tenantInput =
+        document.getElementById("editTenant");
+
+    if (tenantInput) {
+
+        flat.tenant =
+            tenantInput.value.trim();
+
+    }
 
 
-    // Save to phone storage
+    // ======================================
+    // RENT
+    // ======================================
+
+    const rentInput =
+        document.getElementById("editRent");
+
+    if (rentInput) {
+
+        flat.rent =
+            Number(rentInput.value) || 0;
+
+    }
+
+
+    // ======================================
+    // SAVE DATA
+    // ======================================
+
     localStorage.setItem(
         "flatRegisterData",
         JSON.stringify(flatData)
     );
 
 
-    // Close Edit
+    // ======================================
+    // CLOSE EDIT
+    // ======================================
+
     closeEditBox();
 
 
-    // Update Details Screen
+    // ======================================
+    // UPDATE TENANT NAME
+    // ======================================
+
     document
         .getElementById("detailsTenantName")
         .textContent =
         flat.tenant || "No Tenant";
 
 
-    // Update Status
+    // ======================================
+    // UPDATE PAYMENT STATUS
+    // ======================================
+
     const statusElement =
         document.getElementById("detailsStatus");
 
@@ -619,6 +657,7 @@ function saveFlatEdit() {
 
         let currentMonthPaid = false;
 
+
         if (Array.isArray(flat.rentHistory)) {
 
             const currentMonth =
@@ -626,18 +665,23 @@ function saveFlatEdit() {
                 .toISOString()
                 .slice(0, 7);
 
+
             const currentRent =
                 flat.rentHistory.find(
                     item =>
                         item.month === currentMonth
                 );
 
+
             if (
                 currentRent &&
                 currentRent.status === "PAID"
             ) {
+
                 currentMonthPaid = true;
+
             }
+
         }
 
 
@@ -656,20 +700,22 @@ function saveFlatEdit() {
 
             statusElement.textContent =
                 "🔴 DUE";
+
         }
 
     }
 
 
-    // Save final status
+    // ======================================
+    // FINAL SAVE
+    // ======================================
+
     localStorage.setItem(
         "flatRegisterData",
         JSON.stringify(flatData)
     );
 
 }
-
-
 // ==========================================
 // CLOSE EDIT BOX
 // ==========================================
