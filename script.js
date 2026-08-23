@@ -243,64 +243,61 @@ function renderFlatTable() {
 // OPEN INDIVIDUAL FLAT
 // ==========================================
 
+// ==========================================
+// OPEN INDIVIDUAL FLAT
+// ==========================================
+
 function openFlat(flat) {
 
-    const data =
-        flatData[flat];
+    const data = flatData[flat];
 
-
+    // Flat List hide
     document
         .getElementById("flatListScreen")
         .classList.add("hidden");
 
-    document
-        .getElementById("mainScreen")
-        .classList.add("hidden");
-
+    // Details show
     document
         .getElementById("flatDetailsScreen")
         .classList.remove("hidden");
 
 
+    // Flat Name
     document
         .getElementById("detailsFlatName")
-        .textContent =
-            data.flat;
+        .textContent = data.flat;
 
 
+    // Tenant Name
     document
         .getElementById("detailsTenantName")
-        .textContent =
-            data.tenant || "No Tenant";
+        .textContent = data.tenant || "No Tenant";
 
 
+    // Status
     const statusElement =
         document.getElementById("detailsStatus");
 
 
     if (data.status === "PAID") {
 
-        statusElement.textContent =
-            "🟢 PAID";
+        statusElement.textContent = "🟢 PAID";
 
     }
 
     else if (data.status === "DUE") {
 
-        statusElement.textContent =
-            "🔴 DUE";
+        statusElement.textContent = "🔴 DUE";
 
     }
 
     else {
 
-        statusElement.textContent =
-            "⚪ VACANT";
+        statusElement.textContent = "⚪ VACANT";
 
     }
 
 }
-
 
 // ==========================================
 // DASHBOARD COUNT
