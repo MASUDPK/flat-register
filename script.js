@@ -566,17 +566,50 @@ function toggleEditMode() {
 
 function saveFlatEdit() {
 
-    // Get Flat directly from Details screen
-    const flatName =
-        document.getElementById("detailsFlatName").textContent.trim();
+    // Get the selected flat safely
+    let flatName = selectedFlatForEdit;
 
-    const flat =
-        flatData[flatName];
+    if (!flatName) {
 
-    if (!flat) {
-        alert("Flat data not found: " + flatName);
+        flatName =
+            document
+                .getElementById("detailsFlatName")
+                .textContent
+                .trim();
+
+    }
+
+    // Find the exact flat name from FLATS
+    const flatKey =
+        FLATS.find(
+            flat =>
+                flat.trim() === flatName.trim()
+        );
+
+    if (!flatKey) {
+
+        alert(
+            "Flat name not found: " + flatName
+        );
+
         return;
     }
+
+    // Get flat data
+    const flat =
+        flatData[flatKey];
+
+    if (!flat) {
+
+        alert(
+            "Flat data not found: " + flatKey
+        );
+
+        return;
+    }
+
+    // Keep selected flat correct
+    selectedFlatForEdit = flatKey;
 
 
     // ======================================
