@@ -561,6 +561,31 @@ function openReceipt() {
 // START APP
 // ==========================================
 
-createFlatData();
+// ==========================================
+// LOAD DATA FROM PHONE STORAGE
+// ==========================================
+
+const savedData =
+    localStorage.getItem("flatRegisterData");
+
+
+if (savedData) {
+
+    flatData =
+        JSON.parse(savedData);
+
+}
+
+else {
+
+    createFlatData();
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+}
+
 
 updateDashboard();
