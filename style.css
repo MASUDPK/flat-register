@@ -1,1 +1,314 @@
+/* ==========================================
+   FLAT REGISTER
+   Mobile UI - style.css
+   ========================================== */
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f1e8;
+    color: #333;
+    min-height: 100vh;
+}
+
+
+/* ==========================================
+   APP HEADER
+   ========================================== */
+
+.app-header {
+    background: #ffffff;
+    padding: 18px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.app-header h1 {
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.app-header p {
+    font-size: 13px;
+    color: #777;
+}
+
+
+/* ==========================================
+   MAIN AREA
+   ========================================== */
+
+main {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 15px;
+}
+
+
+/* ==========================================
+   DASHBOARD
+   ========================================== */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.dashboard-card {
+    min-height: 120px;
+    border: none;
+    border-radius: 14px;
+    background: #ffffff;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    color: #333;
+}
+
+.dashboard-card:active {
+    transform: scale(0.98);
+}
+
+.card-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.card-value {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+/* ==========================================
+   SCREEN
+   ========================================== */
+
+.screen {
+    width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* ==========================================
+   SCREEN HEADER
+   ========================================== */
+
+.screen-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.screen-header h2 {
+    font-size: 19px;
+    flex: 1;
+    text-align: center;
+}
+
+
+/* ==========================================
+   BUTTONS
+   ========================================== */
+
+.back-btn,
+.edit-btn {
+    border: none;
+    border-radius: 9px;
+    padding: 9px 12px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.back-btn {
+    background: #ffffff;
+}
+
+.edit-btn {
+    background: #333;
+    color: #ffffff;
+}
+
+button {
+    font-family: inherit;
+}
+
+
+/* ==========================================
+   FLAT TABLE
+   ========================================== */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+#flatTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+#flatTable th {
+    background: #eee7da;
+    color: #333;
+    font-size: 12px;
+    padding: 11px 7px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#flatTable td {
+    border-top: 1px solid #eee;
+    padding: 10px 7px;
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#flatTable tbody tr {
+    cursor: pointer;
+}
+
+#flatTable tbody tr:active {
+    background: #f3eee5;
+}
+
+
+/* ==========================================
+   STATUS
+   ========================================== */
+
+.status-paid {
+    color: #16803c;
+    font-weight: bold;
+}
+
+.status-due {
+    color: #c62828;
+    font-weight: bold;
+}
+
+.status-vacant {
+    color: #777;
+    font-weight: bold;
+}
+
+
+/* ==========================================
+   FLAT DETAILS
+   ========================================== */
+
+.flat-details {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.flat-details h3 {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 7px;
+}
+
+.flat-details p {
+    text-align: center;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+
+/* ==========================================
+   DETAIL BUTTONS
+   ========================================== */
+
+.detail-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.detail-buttons button {
+    border: none;
+    background: #f5f1e8;
+    border-radius: 10px;
+    padding: 14px 8px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+}
+
+.detail-buttons button:active {
+    transform: scale(0.98);
+}
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 420px) {
+
+    main {
+        padding: 10px;
+    }
+
+    .dashboard {
+        gap: 9px;
+    }
+
+    .dashboard-card {
+        min-height: 105px;
+    }
+
+    .card-icon {
+        font-size: 24px;
+    }
+
+    .card-title {
+        font-size: 14px;
+    }
+
+    .card-value {
+        font-size: 16px;
+    }
+
+    .screen-header h2 {
+        font-size: 17px;
+    }
+
+    .back-btn,
+    .edit-btn {
+        padding: 8px 9px;
+        font-size: 12px;
+    }
+
+  }
