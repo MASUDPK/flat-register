@@ -324,9 +324,7 @@ data.status =
         // SAVE CURRENT STATUS
         // ======================================
 
-        data.status =
-            currentStatus;
-
+   
 
         // ======================================
         // ADD CELLS
