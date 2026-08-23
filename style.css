@@ -403,3 +403,204 @@ button {
     background: #333;
     color: #fff;
 }
+
+
+
+/* ==========================================
+   OTHER BILLS
+   ========================================== */
+
+.other-bills-overlay {
+    position: fixed;
+    inset: 0;
+    background: #f5f1e8;
+    z-index: 10000;
+    overflow-y: auto;
+}
+
+.other-bills-panel {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    min-height: 100vh;
+    padding: 15px;
+}
+
+.other-bills-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.other-bills-header h2 {
+    font-size: 19px;
+}
+
+.other-bills-header button {
+    border: none;
+    background: #ffffff;
+    padding: 9px 12px;
+    border-radius: 9px;
+    font-size: 13px;
+}
+
+.other-bills-panel > h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+
+/* BILL ITEM */
+
+.bill-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    background: #ffffff;
+    border-radius: 11px;
+
+    padding: 13px;
+
+    margin-bottom: 9px;
+
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.07);
+}
+
+.bill-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    min-width: 0;
+}
+
+.bill-info strong {
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.bill-info span {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+/* DELETE */
+
+.delete-bill-btn {
+    border: none;
+    background: #f8dddd;
+    border-radius: 8px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+
+/* ADD BILL */
+
+.add-bill-btn {
+    width: 100%;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #333;
+    color: #ffffff;
+
+    padding: 13px;
+
+    margin-top: 10px;
+
+    font-size: 14px;
+}
+
+
+/* TOTAL */
+
+.other-bill-total {
+    margin-top: 15px;
+
+    background: #ffffff;
+
+    border-radius: 11px;
+
+    padding: 15px;
+
+    text-align: center;
+
+    font-weight: bold;
+
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.07);
+}
+
+
+/* ADD FORM */
+
+.add-bill-form {
+    margin-top: 15px;
+
+    background: #ffffff;
+
+    border-radius: 13px;
+
+    padding: 17px;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+.add-bill-form h3 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.add-bill-form label {
+    display: block;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.add-bill-form input {
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+}
+
+.bill-form-buttons {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 9px;
+
+    margin-top: 15px;
+}
+
+.bill-form-buttons button {
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 11px;
+
+    font-size: 14px;
+
+    background: #eee7da;
+}
+
+.bill-form-buttons button:first-child {
+    background: #333;
+    color: #ffffff;
+}
