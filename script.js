@@ -510,7 +510,6 @@ let selectedFlatForEdit = null;
 
 function toggleEditMode() {
 
-    // যদি Flat Details থেকে Edit চাপা হয়
     const flatName =
         document.getElementById("detailsFlatName").textContent;
 
@@ -523,8 +522,8 @@ function toggleEditMode() {
         return;
     }
 
-    // Edit Box তৈরি
-    const editBox = document.createElement("div");
+    const editBox =
+        document.createElement("div");
 
     editBox.id = "editBox";
 
@@ -536,49 +535,23 @@ function toggleEditMode() {
                 <h2>Edit ${data.flat}</h2>
 
                 <label>Tenant Name</label>
+
                 <input
                     type="text"
                     id="editTenant"
-                    value="${data.tenant}"
+                    value="${data.tenant || ""}"
                     placeholder="Tenant name"
                 >
 
                 <label>Rent</label>
+
                 <input
                     type="number"
                     id="editRent"
                     value="${data.rent || ""}"
                     placeholder="Rent amount"
+                    inputmode="numeric"
                 >
-
-                <label>Other Bill</label>
-                <input
-                    type="number"
-                    id="editOther"
-                    value="${data.other || ""}"
-                    placeholder="Other bill amount"
-                >
-
-                <label>Status</label>
-
-                <select id="editStatus">
-
-                    <option value="VACANT"
-                        ${data.status === "VACANT" ? "selected" : ""}>
-                        VACANT
-                    </option>
-
-                    <option value="PAID"
-                        ${data.status === "PAID" ? "selected" : ""}>
-                        PAID
-                    </option>
-
-                    <option value="DUE"
-                        ${data.status === "DUE" ? "selected" : ""}>
-                        DUE
-                    </option>
-
-                </select>
 
                 <div class="edit-actions">
 
@@ -598,7 +571,6 @@ function toggleEditMode() {
     `;
 
     document.body.appendChild(editBox);
-
 }
 
 
