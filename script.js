@@ -70,21 +70,16 @@ function goHome() {
         .classList.add("hidden");
 
     document
-        .getElementById("mainScreen")
+        .querySelector(".dashboard")
         .classList.remove("hidden");
 
 }
-
 
 // ==========================================
 // SHOW FLAT LIST
 // ==========================================
 
 function showFlatList() {
-
-    document
-        .getElementById("mainScreen")
-        .classList.add("hidden");
 
     document
         .getElementById("flatDetailsScreen")
@@ -94,10 +89,13 @@ function showFlatList() {
         .getElementById("flatListScreen")
         .classList.remove("hidden");
 
+    document
+        .querySelector(".dashboard")
+        .classList.add("hidden");
+
     renderFlatTable();
 
 }
-
 
 // ==========================================
 // CREATE FLAT TABLE
