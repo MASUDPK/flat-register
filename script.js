@@ -532,10 +532,71 @@ function openHistory() {
 
 function openRent() {
 
-    alert(
-        "Rent section will be added next."
-    );
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
 
+    const data = flatData[flatName];
+
+    if (!data) {
+        alert("Flat data not found.");
+        return;
+    }
+
+    if (!Array.isArray(data.rentHistory)) {
+        data.rentHistory = [];
+    }
+
+    const box = document.createElement("div");
+
+    box.id = "rentHistoryBox";
+
+    box.innerHTML = `
+        <div class="rent-overlay">
+
+            <div class="rent-panel">
+
+                <div class="rent-header">
+
+                    <button onclick="closeRentHistory()">
+                        ← Back
+                    </button>
+
+                    <h2>Rent History</h2>
+
+                    <span></span>
+
+                </div>
+
+                <h3>${escapeHTML(data.flat)}</h3>
+
+                <div class="current-rent-box">
+
+                    <span>Monthly Rent</span>
+
+                    <strong>
+                        ৳${Number(data.rent || 0).toLocaleString()}
+                    </strong>
+
+                </div>
+
+                <div id="rentHistoryList"></div>
+
+                <button
+                    class="add-rent-btn"
+                    onclick="showRentForm()">
+
+                    ➕ Add Rent
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(box);
+
+    renderRentHistory(flatName);
 }
 
 
