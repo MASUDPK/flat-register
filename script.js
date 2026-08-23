@@ -947,3 +947,379 @@ function escapeHTML(text) {
 }
 
 
+// ==========================================
+// TENANT HISTORY SYSTEM
+// ==========================================
+
+function openHistory() {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data = flatData[flatName];
+
+    if (!data) {
+        alert("Flat data not found.");
+        return;
+    }
+
+    // Old data হলে history তৈরি
+    if (!Array.isArray(data.tenantHistory)) {
+        data.tenantHistory = [];
+    }
+
+    const box = document.createElement("div");
+
+    box.id = "historyBox";
+
+    box.innerHTML = `
+        <div class="history-overlay">
+
+            <div class="history-panel">
+
+                <div class="history-header">
+
+                    <button onclick="closeHistory()">
+                        ← Back
+                    </button>
+
+                    <h2>Tenant History</h2>
+
+                    <span></span>
+
+                </div>
+
+                <h3>${data.flat}</h3>
+
+                <div class="current-tenant-box">
+
+                    <h4>Current Tenant</h4>
+
+                    <p>
+                        ${escapeHTML(data.tenant || "No Tenant")}
+                    </p>
+
+                </div>
+
+                <h4 class="history-title">
+                    Previous Tenants
+                </h4>
+
+                <div id="tenantHistoryList"></div>
+
+                <button
+                    class="add-history-btn"
+                    onclick="showTenantHistoryForm()">
+
+                    ➕ Add Previous Tenant
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(box);
+
+    renderTenantHistory(flatName);
+}
+
+
+// ==========================================
+// SHOW HISTORY
+// ==========================================
+
+function renderTenantHistory(flatName) {
+
+    const data = flatData[flatName];
+
+    const list =
+        document.getElementById("tenantHistoryList");
+
+    if (!list) {
+        return;
+    }
+
+    list.innerHTML = "";
+
+    if (data.tenantHistory.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty-history">
+                No previous tenant history
+            </div>
+        `;
+
+        return;
+    }
+
+
+    data.tenantHistory.forEach((tenant, index) => {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "history-item";
+
+        item.innerHTML = `
+
+            <div class="history-info">
+
+                <strong>
+                    ${escapeHTML(tenant.name)}
+                </strong>
+
+                <span>
+                    📱 ${escapeHTML(tenant.phone || "—")}
+                </span>
+
+                <span>
+                    🪪 ${escapeHTML(tenant.identity || "—")}
+                </span>
+
+                <span>
+                    📅 ${escapeHTML(tenant.joinDate || "—")}
+                    →
+                    ${escapeHTML(tenant.leaveDate || "—")}
+                </span>
+
+            </div>
+
+            <button
+                class="delete-history-btn"
+                onclick="deleteTenantHistory(${index})">
+
+                🗑️
+
+            </button>
+
+        `;
+
+        list.appendChild(item);
+
+    });
+
+}
+
+
+// ==========================================
+// ADD HISTORY FORM
+// ==========================================
+
+function showTenantHistoryForm() {
+
+    const form =
+        document.createElement("div");
+
+    form.id = "tenantHistoryForm";
+
+    form.innerHTML = `
+
+        <div class="history-form">
+
+            <h3>Add Previous Tenant</h3>
+
+            <label>Tenant Name</label>
+
+            <input
+                type="text"
+                id="historyName"
+                placeholder="Tenant name"
+            >
+
+            <label>Mobile Number</label>
+
+            <input
+                type="tel"
+                id="historyPhone"
+                placeholder="Mobile number"
+            >
+
+            <label>Identity</label>
+
+            <input
+                type="text"
+                id="historyIdentity"
+                placeholder="NID / Passport / Other"
+            >
+
+            <label>Join Date</label>
+
+            <input
+                type="date"
+                id="historyJoinDate"
+            >
+
+            <label>Leave Date</label>
+
+            <input
+                type="date"
+                id="historyLeaveDate"
+            >
+
+            <div class="history-form-buttons">
+
+                <button onclick="saveTenantHistory()">
+                    💾 Save
+                </button>
+
+                <button onclick="closeTenantHistoryForm()">
+                    ✖ Cancel
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document
+        .getElementById("historyBox")
+        .querySelector(".history-panel")
+        .appendChild(form);
+
+}
+
+
+// ==========================================
+// SAVE HISTORY
+// ==========================================
+
+function saveTenantHistory() {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data =
+        flatData[flatName];
+
+    const name =
+        document.getElementById("historyName").value.trim();
+
+    const phone =
+        document.getElementById("historyPhone").value.trim();
+
+    const identity =
+        document.getElementById("historyIdentity").value.trim();
+
+    const joinDate =
+        document.getElementById("historyJoinDate").value;
+
+    const leaveDate =
+        document.getElementById("historyLeaveDate").value;
+
+
+    if (!name) {
+
+        alert("Please enter tenant name.");
+
+        return;
+    }
+
+
+    data.tenantHistory.push({
+
+        name: name,
+
+        phone: phone,
+
+        identity: identity,
+
+        joinDate: joinDate,
+
+        leaveDate: leaveDate
+
+    });
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    closeTenantHistoryForm();
+
+    renderTenantHistory(flatName);
+
+}
+
+
+// ==========================================
+// DELETE HISTORY
+// ==========================================
+
+function deleteTenantHistory(index) {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data || !data.tenantHistory[index]) {
+        return;
+    }
+
+
+    const tenantName =
+        data.tenantHistory[index].name;
+
+
+    if (!confirm(
+        `Delete history of "${tenantName}"?`
+    )) {
+
+        return;
+    }
+
+
+    data.tenantHistory.splice(index, 1);
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    renderTenantHistory(flatName);
+
+}
+
+
+// ==========================================
+// CLOSE HISTORY
+// ==========================================
+
+function closeHistory() {
+
+    const box =
+        document.getElementById("historyBox");
+
+    if (box) {
+        box.remove();
+    }
+
+}
+
+
+// ==========================================
+// CLOSE HISTORY FORM
+// ==========================================
+
+function closeTenantHistoryForm() {
+
+    const form =
+        document.getElementById("tenantHistoryForm");
+
+    if (form) {
+        form.remove();
+    }
+
+                                }
+
+
+
+
