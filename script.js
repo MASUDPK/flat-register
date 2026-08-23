@@ -230,9 +230,6 @@ function renderFlatTable() {
         // PAYMENT STATUS
         // ======================================
 
-        // ======================================
-// PAYMENT STATUS
-// ======================================
 const statusCell =
     document.createElement("td");
 const currentMonth =
@@ -372,10 +369,6 @@ data.status =
 
 }
 
-
-// ==========================================
-// OPEN INDIVIDUAL FLAT
-// ==========================================
 
 // ==========================================
 // OPEN INDIVIDUAL FLAT
@@ -559,9 +552,7 @@ function toggleEditMode() {
 // SAVE EDITED DATA
 // ==========================================
 
-// ==========================================
-// SAVE EDITED DATA
-// ==========================================
+
 
 function saveFlatEdit() {
 
