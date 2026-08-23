@@ -584,36 +584,106 @@ function saveFlatEdit() {
         flatData[selectedFlatForEdit];
 
     if (!flat) {
+        alert("Flat data not found.");
         return;
     }
 
+    // Tenant Name
     flat.tenant =
-        document.getElementById("editTenant").value.trim();
+        document.getElementById("editTenant")
+        .value
+        .trim();
 
+    // Rent
     flat.rent =
-        Number(document.getElementById("editRent").value) || 0;
-
-    flat.other =
-        Number(document.getElementById("editOther").value) || 0;
-
-    flat.status =
-        document.getElementById("editStatus").value;
+        Number(
+            document.getElementById("editRent").value
+        ) || 0;
 
 
-    // ফোনের Storage-এ Save
+    // Save to phone storage
     localStorage.setItem(
         "flatRegisterData",
         JSON.stringify(flatData)
     );
 
 
+    // Close Edit
     closeEditBox();
 
-    // Table update
-    renderFlatTable();
 
-    // Details update
-    openFlat(selectedFlatForEdit);
+    // Update Details Screen
+    document
+        .getElementById("detailsTenantName")
+        .textContent =
+        flat.tenant || "No Tenant";
+
+
+    // Update Status
+    const statusElement =
+        document.getElementById("detailsStatus");
+
+
+    if (!flat.tenant) {
+
+        flat.status = "VACANT";
+
+        statusElement.textContent =
+            "⚪ VACANT";
+
+    }
+
+    else {
+
+        let currentMonthPaid = false;
+
+        if (Array.isArray(flat.rentHistory)) {
+
+            const currentMonth =
+                new Date()
+                .toISOString()
+                .slice(0, 7);
+
+            const currentRent =
+                flat.rentHistory.find(
+                    item =>
+                        item.month === currentMonth
+                );
+
+            if (
+                currentRent &&
+                currentRent.status === "PAID"
+            ) {
+                currentMonthPaid = true;
+            }
+        }
+
+
+        if (currentMonthPaid) {
+
+            flat.status = "PAID";
+
+            statusElement.textContent =
+                "🟢 PAID";
+
+        }
+
+        else {
+
+            flat.status = "DUE";
+
+            statusElement.textContent =
+                "🔴 DUE";
+        }
+
+    }
+
+
+    // Save final status
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
 
 }
 
