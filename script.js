@@ -1319,7 +1319,428 @@ function closeTenantHistoryForm() {
     }
 
                                 }
+// ==========================================
+// RENT HISTORY SYSTEM
+// ==========================================
 
+function openRent() {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data = flatData[flatName];
+
+    if (!data) {
+        alert("Flat data not found.");
+        return;
+    }
+
+    if (!Array.isArray(data.rentHistory)) {
+        data.rentHistory = [];
+    }
+
+    const box = document.createElement("div");
+
+    box.id = "rentHistoryBox";
+
+    box.innerHTML = `
+        <div class="rent-overlay">
+
+            <div class="rent-panel">
+
+                <div class="rent-header">
+
+                    <button onclick="closeRentHistory()">
+                        ← Back
+                    </button>
+
+                    <h2>Rent History</h2>
+
+                    <span></span>
+
+                </div>
+
+                <h3>${escapeHTML(data.flat)}</h3>
+
+                <div class="current-rent-box">
+
+                    <span>Monthly Rent</span>
+
+                    <strong>
+                        ৳${Number(data.rent || 0).toLocaleString()}
+                    </strong>
+
+                </div>
+
+                <div id="rentHistoryList"></div>
+
+                <button
+                    class="add-rent-btn"
+                    onclick="showRentForm()">
+
+                    ➕ Add Rent
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(box);
+
+    renderRentHistory(flatName);
+}
+
+
+// ==========================================
+// SHOW RENT HISTORY
+// ==========================================
+
+function renderRentHistory(flatName) {
+
+    const data = flatData[flatName];
+
+    const list =
+        document.getElementById("rentHistoryList");
+
+    if (!list) {
+        return;
+    }
+
+    list.innerHTML = "";
+
+    if (data.rentHistory.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty-rent">
+                No rent history
+            </div>
+        `;
+
+        return;
+    }
+
+
+    data.rentHistory.forEach((rent, index) => {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "rent-item";
+
+        const statusClass =
+            rent.status === "PAID"
+                ? "rent-paid"
+                : "rent-due";
+
+        const statusText =
+            rent.status === "PAID"
+                ? "🟢 PAID"
+                : "🔴 DUE";
+
+        item.innerHTML = `
+
+            <div class="rent-info">
+
+                <strong>
+                    ${escapeHTML(rent.month)}
+                </strong>
+
+                <span>
+                    Rent: ৳${Number(rent.amount).toLocaleString()}
+                </span>
+
+                ${
+                    rent.paidDate
+                    ? `<span>Paid: ${escapeHTML(rent.paidDate)}</span>`
+                    : ""
+                }
+
+            </div>
+
+            <div class="rent-right">
+
+                <span class="${statusClass}">
+                    ${statusText}
+                </span>
+
+                <button
+                    class="delete-rent-btn"
+                    onclick="deleteRentHistory(${index})">
+
+                    🗑️
+
+                </button>
+
+            </div>
+        `;
+
+        list.appendChild(item);
+
+    });
+
+}
+
+
+// ==========================================
+// ADD RENT FORM
+// ==========================================
+
+function showRentForm() {
+
+    const form =
+        document.createElement("div");
+
+    form.id = "rentForm";
+
+    form.innerHTML = `
+
+        <div class="rent-form">
+
+            <h3>Add Rent</h3>
+
+            <label>Month</label>
+
+            <input
+                type="month"
+                id="rentMonth"
+            >
+
+            <label>Rent Amount</label>
+
+            <input
+                type="number"
+                id="rentAmount"
+                placeholder="Rent amount"
+                inputmode="numeric"
+            >
+
+            <label>Status</label>
+
+            <select id="rentStatus">
+
+                <option value="DUE">
+                    🔴 DUE
+                </option>
+
+                <option value="PAID">
+                    🟢 PAID
+                </option>
+
+            </select>
+
+            <label>Paid Date</label>
+
+            <input
+                type="date"
+                id="rentPaidDate"
+            >
+
+            <div class="rent-form-buttons">
+
+                <button onclick="saveRentHistory()">
+                    💾 Save
+                </button>
+
+                <button onclick="closeRentForm()">
+                    ✖ Cancel
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document
+        .getElementById("rentHistoryBox")
+        .querySelector(".rent-panel")
+        .appendChild(form);
+
+}
+
+
+// ==========================================
+// SAVE RENT
+// ==========================================
+
+function saveRentHistory() {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data =
+        flatData[flatName];
+
+    const month =
+        document.getElementById("rentMonth").value;
+
+    const amount =
+        Number(
+            document.getElementById("rentAmount").value
+        ) || 0;
+
+    const status =
+        document.getElementById("rentStatus").value;
+
+    const paidDate =
+        document.getElementById("rentPaidDate").value;
+
+
+    if (!month) {
+
+        alert("Please select month.");
+
+        return;
+    }
+
+    if (amount <= 0) {
+
+        alert("Please enter rent amount.");
+
+        return;
+    }
+
+
+    if (status === "PAID" && !paidDate) {
+
+        alert("Please select paid date.");
+
+        return;
+    }
+
+
+    if (!Array.isArray(data.rentHistory)) {
+        data.rentHistory = [];
+    }
+
+
+    // একই মাস আগে আছে কিনা
+    const existing =
+        data.rentHistory.find(
+            item => item.month === month
+        );
+
+
+    if (existing) {
+
+        alert(
+            "This month's rent already exists."
+        );
+
+        return;
+    }
+
+
+    data.rentHistory.push({
+
+        month: month,
+
+        amount: amount,
+
+        status: status,
+
+        paidDate:
+            status === "PAID"
+                ? paidDate
+                : ""
+
+    });
+
+
+    // নতুন করে সাজানো
+    data.rentHistory.sort(
+        (a, b) =>
+            b.month.localeCompare(a.month)
+    );
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    closeRentForm();
+
+    renderRentHistory(flatName);
+
+}
+
+
+// ==========================================
+// DELETE RENT
+// ==========================================
+
+function deleteRentHistory(index) {
+
+    const flatName =
+        document.getElementById("detailsFlatName").textContent;
+
+    const data =
+        flatData[flatName];
+
+    if (!data || !data.rentHistory[index]) {
+        return;
+    }
+
+
+    const month =
+        data.rentHistory[index].month;
+
+
+    if (!confirm(
+        `Delete rent for ${month}?`
+    )) {
+
+        return;
+    }
+
+
+    data.rentHistory.splice(index, 1);
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    renderRentHistory(flatName);
+
+}
+
+
+// ==========================================
+// CLOSE RENT HISTORY
+// ==========================================
+
+function closeRentHistory() {
+
+    const box =
+        document.getElementById("rentHistoryBox");
+
+    if (box) {
+        box.remove();
+    }
+
+}
+
+
+// ==========================================
+// CLOSE RENT FORM
+// ==========================================
+
+function closeRentForm() {
+
+    const form =
+        document.getElementById("rentForm");
+
+    if (form) {
+        form.remove();
+    }
+
+            }
 
 
 
