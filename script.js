@@ -109,6 +109,11 @@ function renderFlatTable() {
     tableBody.innerHTML = "";
 
 
+    // Current Month
+    const currentMonth =
+        new Date().toISOString().slice(0, 7);
+
+
     FLATS.forEach((flat, index) => {
 
         const data = flatData[flat];
@@ -117,7 +122,10 @@ function renderFlatTable() {
             document.createElement("tr");
 
 
+        // ======================================
         // SL
+        // ======================================
+
         const slCell =
             document.createElement("td");
 
@@ -125,7 +133,10 @@ function renderFlatTable() {
             String(index + 1).padStart(2, "0");
 
 
+        // ======================================
         // FLAT
+        // ======================================
+
         const flatCell =
             document.createElement("td");
 
@@ -133,7 +144,10 @@ function renderFlatTable() {
             data.flat;
 
 
+        // ======================================
         // TENANT
+        // ======================================
+
         const tenantCell =
             document.createElement("td");
 
@@ -141,33 +155,70 @@ function renderFlatTable() {
             data.tenant || "—";
 
 
+        // ======================================
         // RENT
+        // ======================================
+
         const rentCell =
             document.createElement("td");
 
+        const rent =
+            Number(data.rent) || 0;
+
         rentCell.textContent =
-            data.rent > 0
-                ? data.rent.toLocaleString()
+            rent > 0
+                ? rent.toLocaleString()
                 : "—";
 
 
-        // OTHER
+        // ======================================
+        // OTHER BILLS
+        // ======================================
+
         const otherCell =
             document.createElement("td");
 
+        let otherTotal = 0;
+
+
+        if (Array.isArray(data.otherBills)) {
+
+            otherTotal =
+                data.otherBills.reduce(
+                    (sum, bill) =>
+                        sum + (Number(bill.amount) || 0),
+                    0
+                );
+
+        }
+
+        else {
+
+            otherTotal =
+                Number(data.other) || 0;
+
+        }
+
+
+        // Keep old data.other updated
+        data.other = otherTotal;
+
+
         otherCell.textContent =
-            data.other > 0
-                ? data.other.toLocaleString()
+            otherTotal > 0
+                ? otherTotal.toLocaleString()
                 : "—";
 
 
+        // ======================================
         // TOTAL
+        // ======================================
+
         const totalCell =
             document.createElement("td");
 
         const total =
-            Number(data.rent) +
-            Number(data.other);
+            rent + otherTotal;
 
         totalCell.textContent =
             total > 0
@@ -175,12 +226,87 @@ function renderFlatTable() {
                 : "—";
 
 
-        // STATUS
+        // ======================================
+        // PAYMENT STATUS
+        // ======================================
+
         const statusCell =
             document.createElement("td");
 
 
-        if (data.status === "PAID") {
+        let currentStatus;
+
+
+        // --------------------------------------
+        // 1. No Tenant = VACANT
+        // --------------------------------------
+
+        if (!data.tenant || data.tenant.trim() === "") {
+
+            currentStatus = "VACANT";
+
+        }
+
+
+        // --------------------------------------
+        // 2. Tenant আছে
+        // --------------------------------------
+
+        else {
+
+            let currentRentPaid = false;
+
+
+            // Rent History আছে কিনা
+            if (Array.isArray(data.rentHistory)) {
+
+                const currentRent =
+                    data.rentHistory.find(
+                        item =>
+                            item.month === currentMonth
+                    );
+
+
+                if (
+                    currentRent &&
+                    currentRent.status === "PAID"
+                ) {
+
+                    currentRentPaid = true;
+
+                }
+
+            }
+
+
+            // ----------------------------------
+            // Current Month Paid
+            // ----------------------------------
+
+            if (currentRentPaid) {
+
+                currentStatus = "PAID";
+
+            }
+
+            // ----------------------------------
+            // Current Month Not Paid
+            // ----------------------------------
+
+            else {
+
+                currentStatus = "DUE";
+
+            }
+
+        }
+
+
+        // ======================================
+        // SHOW STATUS
+        // ======================================
+
+        if (currentStatus === "PAID") {
 
             statusCell.textContent =
                 "🟢 PAID";
@@ -190,7 +316,7 @@ function renderFlatTable() {
 
         }
 
-        else if (data.status === "DUE") {
+        else if (currentStatus === "DUE") {
 
             statusCell.textContent =
                 "🔴 DUE";
@@ -211,17 +337,37 @@ function renderFlatTable() {
         }
 
 
+        // ======================================
+        // SAVE CURRENT STATUS
+        // ======================================
+
+        data.status =
+            currentStatus;
+
+
+        // ======================================
         // ADD CELLS
+        // ======================================
+
         row.appendChild(slCell);
+
         row.appendChild(flatCell);
+
         row.appendChild(tenantCell);
+
         row.appendChild(rentCell);
+
         row.appendChild(otherCell);
+
         row.appendChild(totalCell);
+
         row.appendChild(statusCell);
 
 
+        // ======================================
         // CLICK FLAT
+        // ======================================
+
         row.addEventListener("click", function () {
 
             openFlat(flat);
@@ -232,6 +378,13 @@ function renderFlatTable() {
         tableBody.appendChild(row);
 
     });
+
+
+    // Save updated status
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
 
 
     updateDashboard();
