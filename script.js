@@ -2560,6 +2560,47 @@ function closeReceipt() {
 }
 
 
+// ==========================================
+// BACKUP DATA
+// ==========================================
+
+function backupData() {
+
+    const backupData = {
+        version: 1,
+        backupDate: new Date().toISOString(),
+        data: flatData
+    };
+
+    const json =
+        JSON.stringify(backupData, null, 2);
+
+    const blob =
+        new Blob(
+            [json],
+            { type: "application/json" }
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        "Jamila_Bhavan_Flat_Backup.json";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+}
+
 
 
 
