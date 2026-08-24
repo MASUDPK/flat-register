@@ -41,6 +41,19 @@
     <span class="card-title">Backup</span>
     <span class="card-value">Save Data</span>
 </button>
+            <button class="dashboard-card" onclick="document.getElementById('restoreFile').click()">
+    <span class="card-icon">♻️</span>
+    <span class="card-title">Restore</span>
+    <span class="card-value">Load Backup</span>
+</button>
+
+<input
+    type="file"
+    id="restoreFile"
+    accept=".json"
+    style="display:none"
+    onchange="restoreData(event)"
+>
             <div class="dashboard-card">
                 <span class="card-icon">🟢</span>
                 <span class="card-title">Paid</span>
