@@ -960,13 +960,7 @@ function closeTenant() {
 }
 
 
-function openHistory() {
 
-    alert(
-        "History section will be added next."
-    );
-
-}
 
 
 function openRent() {
