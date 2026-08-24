@@ -2600,7 +2600,86 @@ function backupData() {
 
     URL.revokeObjectURL(url);
 }
+// ==========================================
+// RESTORE DATA
+// ==========================================
 
+function restoreData(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    const reader =
+        new FileReader();
+
+    reader.onload = function(e) {
+
+        try {
+
+            const backup =
+                JSON.parse(e.target.result);
+
+            if (
+                !backup ||
+                !backup.data ||
+                typeof backup.data !== "object"
+            ) {
+
+                alert("Invalid backup file.");
+
+                return;
+            }
+
+
+            const confirmRestore =
+                confirm(
+                    "Restore backup?\n\nCurrent data will be replaced."
+                );
+
+            if (!confirmRestore) {
+                return;
+            }
+
+
+            flatData =
+                backup.data;
+
+
+            localStorage.setItem(
+                "flatRegisterData",
+                JSON.stringify(flatData)
+            );
+
+
+            alert(
+                "Backup restored successfully."
+            );
+
+
+            location.reload();
+
+        }
+
+        catch (error) {
+
+            alert(
+                "Could not restore backup."
+            );
+
+            console.error(error);
+
+        }
+
+    };
+
+
+    reader.readAsText(file);
+
+}
 
 
 
