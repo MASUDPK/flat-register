@@ -2682,6 +2682,720 @@ function restoreData(event) {
 }
 
 
+// ==========================================
+// BILL + PAID + A4 PDF SYSTEM
+// ==========================================
 
+let currentBillFlat = null;
+
+
+// ==========================================
+// GET CURRENT FLAT
+// ==========================================
+
+function getCurrentBillFlat() {
+
+    const flatName =
+        document.getElementById("detailsFlatName")
+        .textContent
+        .trim();
+
+    if (!flatName || !flatData[flatName]) {
+
+        alert("Please select a flat first.");
+
+        return null;
+    }
+
+    return flatName;
+}
+
+
+// ==========================================
+// CREATE BILL
+// ==========================================
+
+function createBill() {
+
+    const flatName = getCurrentBillFlat();
+
+    if (!flatName) {
+        return;
+    }
+
+    const data = flatData[flatName];
+
+    currentBillFlat = flatName;
+
+    const month =
+        new Date()
+        .toISOString()
+        .slice(0, 7);
+
+
+    if (!Array.isArray(data.rentHistory)) {
+
+        data.rentHistory = [];
+
+    }
+
+
+    // Check current month bill
+
+    let bill =
+        data.rentHistory.find(
+            item => item.month === month
+        );
+
+
+    // Create new bill
+
+    if (!bill) {
+
+        bill = {
+
+            month: month,
+
+            rent: Number(data.rent) || 0,
+
+            other: Number(data.other) || 0,
+
+            total:
+                (Number(data.rent) || 0) +
+                (Number(data.other) || 0),
+
+            paid: 0,
+
+            due:
+                (Number(data.rent) || 0) +
+                (Number(data.other) || 0),
+
+            status: "DUE",
+
+            created: new Date().toISOString()
+
+        };
+
+
+        data.rentHistory.push(bill);
+
+    }
+
+
+    // Current status
+
+    if (bill.paid >= bill.total) {
+
+        bill.status = "PAID";
+
+        bill.due = 0;
+
+    }
+
+    else {
+
+        bill.status = "DUE";
+
+        bill.due =
+            Math.max(
+                0,
+                bill.total - bill.paid
+            );
+
+    }
+
+
+    data.status = bill.status;
+
+
+    // Save
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    alert(
+        "Bill Created Successfully\n\n" +
+        "Flat: " + flatName +
+        "\nMonth: " + month +
+        "\nTotal: ৳" +
+        bill.total.toLocaleString() +
+        "\nDue: ৳" +
+        bill.due.toLocaleString()
+    );
+
+
+    updateFlatDetailsStatus();
+
+    renderFlatTable();
+
+}
+
+
+// ==========================================
+// PAID BILL
+// ==========================================
+
+function payBill() {
+
+    const flatName = getCurrentBillFlat();
+
+    if (!flatName) {
+        return;
+    }
+
+    const data = flatData[flatName];
+
+    const month =
+        new Date()
+        .toISOString()
+        .slice(0, 7);
+
+
+    if (!Array.isArray(data.rentHistory)) {
+
+        data.rentHistory = [];
+
+    }
+
+
+    let bill =
+        data.rentHistory.find(
+            item => item.month === month
+        );
+
+
+    // If bill does not exist
+
+    if (!bill) {
+
+        alert(
+            "Please create the bill first."
+        );
+
+        return;
+
+    }
+
+
+    if (bill.status === "PAID") {
+
+        alert("This bill is already PAID.");
+
+        return;
+
+    }
+
+
+    const amountText =
+        prompt(
+            "Enter Paid Amount\n\n" +
+            "Due: ৳" +
+            Number(bill.due || 0)
+            .toLocaleString()
+        );
+
+
+    if (amountText === null) {
+        return;
+    }
+
+
+    const amount =
+        Number(amountText);
+
+
+    if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ) {
+
+        alert("Please enter a valid amount.");
+
+        return;
+
+    }
+
+
+    bill.paid += amount;
+
+
+    if (bill.paid >= bill.total) {
+
+        bill.paid = bill.total;
+
+        bill.due = 0;
+
+        bill.status = "PAID";
+
+    }
+
+    else {
+
+        bill.due =
+            bill.total - bill.paid;
+
+        bill.status = "DUE";
+
+    }
+
+
+    // Update flat status
+
+    data.status = bill.status;
+
+
+    // Save
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    updateFlatDetailsStatus();
+
+    renderFlatTable();
+
+
+    if (bill.status === "PAID") {
+
+        alert(
+            "Payment Successful!\n\n" +
+            "Status: 🟢 PAID"
+        );
+
+    }
+
+    else {
+
+        alert(
+            "Payment Saved!\n\n" +
+            "Remaining Due: ৳" +
+            bill.due.toLocaleString()
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// UPDATE DETAILS STATUS
+// ==========================================
+
+function updateFlatDetailsStatus() {
+
+    const flatName =
+        document.getElementById("detailsFlatName")
+        .textContent
+        .trim();
+
+    const data =
+        flatData[flatName];
+
+    if (!data) {
+        return;
+    }
+
+
+    const statusElement =
+        document.getElementById("detailsStatus");
+
+
+    if (data.status === "PAID") {
+
+        statusElement.textContent =
+            "🟢 PAID";
+
+        statusElement.className =
+            "status-paid";
+
+    }
+
+    else if (data.status === "DUE") {
+
+        statusElement.textContent =
+            "🔴 DUE";
+
+        statusElement.className =
+            "status-due";
+
+    }
+
+    else {
+
+        statusElement.textContent =
+            "⚪ VACANT";
+
+        statusElement.className =
+            "status-vacant";
+
+    }
+
+}
+
+
+// ==========================================
+// A4 PDF BILL
+// ==========================================
+
+function downloadBillPDF() {
+
+    const flatName =
+        getCurrentBillFlat();
+
+    if (!flatName) {
+        return;
+    }
+
+
+    const data =
+        flatData[flatName];
+
+
+    const month =
+        new Date()
+        .toISOString()
+        .slice(0, 7);
+
+
+    if (
+        !Array.isArray(data.rentHistory) ||
+        data.rentHistory.length === 0
+    ) {
+
+        alert(
+            "Please create the bill first."
+        );
+
+        return;
+
+    }
+
+
+    const bill =
+        data.rentHistory.find(
+            item => item.month === month
+        );
+
+
+    if (!bill) {
+
+        alert(
+            "No bill found for this month."
+        );
+
+        return;
+
+    }
+
+
+    // Check jsPDF
+
+    if (
+        typeof window.jspdf === "undefined"
+    ) {
+
+        alert(
+            "PDF library not loaded.\n" +
+            "Please check your internet connection."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        jsPDF
+    } = window.jspdf;
+
+
+    // A4 PDF
+
+    const doc =
+        new jsPDF({
+            orientation: "portrait",
+            unit: "mm",
+            format: "a4"
+        });
+
+
+    // ======================================
+    // HEADER
+    // ======================================
+
+    doc.setFontSize(22);
+
+    doc.text(
+        "JAMILA BHAVAN",
+        105,
+        25,
+        {
+            align: "center"
+        }
+    );
+
+
+    doc.setFontSize(14);
+
+    doc.text(
+        "TENANT & RENT BILL",
+        105,
+        34,
+        {
+            align: "center"
+        }
+    );
+
+
+    doc.line(
+        20,
+        40,
+        190,
+        40
+    );
+
+
+    // ======================================
+    // BILL INFORMATION
+    // ======================================
+
+    doc.setFontSize(12);
+
+
+    doc.text(
+        "Flat No:",
+        25,
+        55
+    );
+
+    doc.text(
+        flatName,
+        80,
+        55
+    );
+
+
+    doc.text(
+        "Tenant:",
+        25,
+        65
+    );
+
+    doc.text(
+        data.tenant || "No Tenant",
+        80,
+        65
+    );
+
+
+    doc.text(
+        "Billing Month:",
+        25,
+        75
+    );
+
+    doc.text(
+        month,
+        80,
+        75
+    );
+
+
+    // ======================================
+    // BILL TABLE
+    // ======================================
+
+    doc.line(
+        20,
+        88,
+        190,
+        88
+    );
+
+
+    doc.text(
+        "Description",
+        25,
+        100
+    );
+
+    doc.text(
+        "Amount",
+        160,
+        100
+    );
+
+
+    doc.line(
+        20,
+        105,
+        190,
+        105
+    );
+
+
+    // Rent
+
+    doc.text(
+        "Monthly Rent",
+        25,
+        118
+    );
+
+    doc.text(
+        "Tk " +
+        Number(bill.rent || 0)
+        .toLocaleString(),
+        160,
+        118
+    );
+
+
+    // Other
+
+    doc.text(
+        "Other Bills",
+        25,
+        130
+    );
+
+    doc.text(
+        "Tk " +
+        Number(bill.other || 0)
+        .toLocaleString(),
+        160,
+        130
+    );
+
+
+    doc.line(
+        20,
+        140,
+        190,
+        140
+    );
+
+
+    // Total
+
+    doc.setFontSize(14);
+
+    doc.text(
+        "TOTAL",
+        25,
+        153
+    );
+
+    doc.text(
+        "Tk " +
+        Number(bill.total || 0)
+        .toLocaleString(),
+        160,
+        153
+    );
+
+
+    // Paid
+
+    doc.setFontSize(12);
+
+    doc.text(
+        "Paid",
+        25,
+        168
+    );
+
+    doc.text(
+        "Tk " +
+        Number(bill.paid || 0)
+        .toLocaleString(),
+        160,
+        168
+    );
+
+
+    // Due
+
+    doc.text(
+        "Due",
+        25,
+        180
+    );
+
+    doc.text(
+        "Tk " +
+        Number(bill.due || 0)
+        .toLocaleString(),
+        160,
+        180
+    );
+
+
+    doc.line(
+        20,
+        190,
+        190,
+        190
+    );
+
+
+    // ======================================
+    // STATUS
+    // ======================================
+
+    doc.setFontSize(15);
+
+    doc.text(
+        "Payment Status: " +
+        bill.status,
+        25,
+        205
+    );
+
+
+    // ======================================
+    // FOOTER
+    // ======================================
+
+    doc.setFontSize(10);
+
+    doc.text(
+        "Generated by Flat Register",
+        105,
+        270,
+        {
+            align: "center"
+        }
+    );
+
+
+    doc.text(
+        new Date().toLocaleDateString(),
+        105,
+        278,
+        {
+            align: "center"
+        }
+    );
+
+
+    // ======================================
+    // SAVE PDF
+    // ======================================
+
+    doc.save(
+        "Jamila-Bhavan-" +
+        flatName +
+        "-" +
+        month +
+        ".pdf"
+    );
+
+        }
 
 
