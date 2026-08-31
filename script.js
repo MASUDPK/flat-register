@@ -2424,10 +2424,16 @@ function openReceipt() {
 // WHATSAPP RECEIPT
 // ==========================================
 
+// ==========================================
+// WHATSAPP RECEIPT
+// ==========================================
+
 function sendReceiptWhatsApp() {
 
     const flatName =
-        document.getElementById("detailsFlatName").textContent;
+        document.getElementById("detailsFlatName")
+        .textContent
+        .trim();
 
     const data = flatData[flatName];
 
@@ -2437,9 +2443,69 @@ function sendReceiptWhatsApp() {
     }
 
 
+    // ======================================
+    // GET PHONE NUMBER
+    // ======================================
+
+    let phone =
+        String(data.tenantPhone || "")
+        .replace(/\D/g, "");
+
+
+    if (!phone) {
+
+        alert(
+            "This flat has no WhatsApp number.\n\n" +
+            "Please add the tenant mobile number first."
+        );
+
+        return;
+    }
+
+
+    // ======================================
+    // BANGLADESH NUMBER FORMAT
+    // ======================================
+
+    if (phone.startsWith("01")) {
+
+        phone = "88" + phone;
+
+    }
+
+    else if (phone.startsWith("880")) {
+
+        // Already correct
+
+    }
+
+    else if (phone.startsWith("88")) {
+
+        // Keep as it is
+
+    }
+
+    else {
+
+        alert(
+            "Invalid Bangladesh mobile number."
+        );
+
+        return;
+    }
+
+
+    // ======================================
+    // RENT
+    // ======================================
+
     const rent =
         Number(data.rent) || 0;
 
+
+    // ======================================
+    // OTHER BILLS
+    // ======================================
 
     const otherTotal =
         Array.isArray(data.otherBills)
@@ -2453,112 +2519,128 @@ function sendReceiptWhatsApp() {
         0;
 
 
+    // ======================================
+    // TOTAL
+    // ======================================
+
     const total =
         rent + otherTotal;
 
 
     const date =
-        new Date().toLocaleDateString("en-GB");
+        new Date()
+        .toLocaleDateString("en-GB");
 
+
+    // ======================================
+    // MESSAGE
+    // ======================================
 
     let message = "";
 
-    message += "🏢 *JAMILA BHAVAN*%0A";
-    message += "🧾 *RENT & BILL RECEIPT*%0A";
-    message += "--------------------------%0A";
+    message += "🏢 *JAMILA BHAVAN*\n";
+    message += "🧾 *RENT & BILL RECEIPT*\n";
+    message += "--------------------------\n";
 
     message +=
         "Flat: " +
         (data.flat || "") +
-        "%0A";
+        "\n";
 
     message +=
         "Tenant: " +
         (data.tenant || "No Tenant") +
-        "%0A";
+        "\n";
 
     message +=
         "Date: " +
         date +
-        "%0A";
+        "\n";
 
-    message += "--------------------------%0A";
+    message += "--------------------------\n";
 
     message +=
         "Rent: ৳" +
         rent.toLocaleString() +
-        "%0A";
+        "\n";
 
+
+    // ======================================
+    // OTHER BILLS
+    // ======================================
 
     if (
         Array.isArray(data.otherBills) &&
         data.otherBills.length > 0
     ) {
 
-        message += "%0A*Other Bills*%0A";
+        message += "\n*Other Bills*\n";
 
         data.otherBills.forEach(bill => {
 
             message +=
-                bill.name +
+                (bill.name || "Other") +
                 ": ৳" +
-                Number(bill.amount).toLocaleString() +
-                "%0A";
+                Number(bill.amount || 0)
+                .toLocaleString() +
+                "\n";
 
         });
 
     }
 
 
-    message += "--------------------------%0A";
+    message +=
+        "--------------------------\n";
+
 
     message +=
         "*TOTAL: ৳" +
         total.toLocaleString() +
-        "*%0A";
+        "*\n";
 
+
+    // ======================================
+    // STATUS
+    // ======================================
 
     if (data.status === "PAID") {
 
-        message += "🟢 PAID%0A";
+        message +=
+            "🟢 *PAID*\n";
 
     }
 
     else if (data.status === "DUE") {
 
-        message += "🔴 DUE%0A";
+        message +=
+            "🔴 *DUE*\n";
 
     }
 
 
-    message += "--------------------------%0A";
-    message += "Thank you.";
+    message +=
+        "--------------------------\n";
 
+    message +=
+        "Thank you.";
+
+
+    // ======================================
+    // WHATSAPP
+    // ======================================
 
     const whatsappURL =
-        "https://wa.me/?text=" + message;
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(message);
 
 
     window.location.href =
         whatsappURL;
-}
-
-
-// ==========================================
-// CLOSE RECEIPT
-// ==========================================
-
-function closeReceipt() {
-
-    const box =
-        document.getElementById("receiptBox");
-
-    if (box) {
-        box.remove();
-    }
 
 }
-
 
 // ==========================================
 // BACKUP DATA
@@ -2693,21 +2775,66 @@ let currentBillFlat = null;
 // GET CURRENT FLAT
 // ==========================================
 
+// ==========================================
+// GET CURRENT FLAT FOR BILL
+// ==========================================
+
 function getCurrentBillFlat() {
 
-    const flatName =
-        document.getElementById("detailsFlatName")
-        .textContent
-        .trim();
+    const element =
+        document.getElementById("detailsFlatName");
 
-    if (!flatName || !flatData[flatName]) {
+    if (!element) {
+
+        alert("Flat details not found.");
+
+        return null;
+    }
+
+
+    const flatName =
+        element.textContent.trim();
+
+
+    if (!flatName || flatName === "Flat") {
 
         alert("Please select a flat first.");
 
         return null;
     }
 
-    return flatName;
+
+    // Find exact flat from FLATS
+
+    const flatKey =
+        FLATS.find(
+            flat => flat.trim() === flatName
+        );
+
+
+    if (!flatKey) {
+
+        alert(
+            "Flat not found: " + flatName
+        );
+
+        return null;
+    }
+
+
+    // Check flat data
+
+    if (!flatData[flatKey]) {
+
+        alert(
+            "Data not found for " + flatKey
+        );
+
+        return null;
+    }
+
+
+    return flatKey;
 }
 
 
