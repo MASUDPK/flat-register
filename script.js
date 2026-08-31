@@ -2420,6 +2420,33 @@ function openReceipt() {
 }
 
 
+
+// ==========================================
+// CLOSE RECEIPT
+// ==========================================
+
+function closeReceipt() {
+
+    const receiptBox =
+        document.getElementById("receiptBox");
+
+    // Receipt বন্ধ করো
+    if (receiptBox) {
+        receiptBox.remove();
+    }
+
+    // Flat Details আবার দেখাও
+    document
+        .getElementById("flatDetailsScreen")
+        .classList.remove("hidden");
+
+    // Flat List বন্ধ রাখো
+    document
+        .getElementById("flatListScreen")
+        .classList.add("hidden");
+
+}
+
 // ==========================================
 // WHATSAPP RECEIPT
 // ==========================================
