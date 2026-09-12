@@ -1,5 +1,434 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flat Register</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ================================= -->
+    <!-- APP HEADER -->
+    <!-- ================================= -->
+
+    <header class="app-header">
+        <h1>Flat Register</h1>
+        <p>Tenant & Rent Management</p>
+    </header>
+
+
+    <!-- ================================= -->
+    <!-- MAIN SCREEN -->
+    <!-- ================================= -->
+
+    <main id="mainScreen">
+
+        <!-- ================================= -->
+        <!-- DASHBOARD -->
+        <!-- ================================= -->
+
+        <section class="dashboard">
+
+            <button class="dashboard-card" onclick="showFlatList()">
+                <span class="card-icon">🏠</span>
+                <span class="card-title">Flat List</span>
+                <span class="card-value">28 Flats</span>
+            </button>
+
+
+            <button class="dashboard-card" onclick="backupData()">
+                <span class="card-icon">💾</span>
+                <span class="card-title">Backup</span>
+                <span class="card-value">Save Data</span>
+            </button>
+
+
+            <button class="dashboard-card"
+                onclick="document.getElementById('restoreFile').click()">
+
+                <span class="card-icon">♻️</span>
+                <span class="card-title">Restore</span>
+                <span class="card-value">Load Backup</span>
+
+            </button>
+
+
+            <input
+                type="file"
+                id="restoreFile"
+                accept=".json"
+                style="display:none"
+                onchange="restoreData(event)"
+            >
+
+
+            <div class="dashboard-card">
+
+                <span class="card-icon">🟢</span>
+
+                <span class="card-title">Paid</span>
+
+                <span class="card-value" id="paidCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <span class="card-icon">🔴</span>
+
+                <span class="card-title">Due</span>
+
+                <span class="card-value" id="dueCount">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <span class="card-icon">⚪</span>
+
+                <span class="card-title">Vacant</span>
+
+                <span class="card-value" id="vacantCount">
+                    28
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================= -->
+        <!-- FLAT LIST SCREEN -->
+        <!-- ================================= -->
+
+        <section id="flatListScreen" class="screen hidden">
+
+            <div class="screen-header">
+
+                <button class="back-btn" onclick="goHome()">
+                    ← Back
+                </button>
+
+                <h2>Flat List</h2>
+
+                <button class="edit-btn" onclick="toggleEditMode()">
+                    ✏️ Edit
+                </button>
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- 28 FLAT TABLE -->
+            <!-- ================================= -->
+
+            <div class="table-container">
+
+                <table id="flatTable">
+
+                    <thead>
+
+                        <tr>
+                            <th>SL</th>
+                            <th>Flat</th>
+                            <th>Tenant</th>
+                            <th>Rent</th>
+                            <th>Other</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="flatTableBody">
+
+                        <!-- A BLOCK -->
+
+                        <tr>
+                            <td>1</td>
+                            <td>A-2</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>A-3</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>3</td>
+                            <td>A-4</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>4</td>
+                            <td>A-5</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>5</td>
+                            <td>A-6</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>6</td>
+                            <td>A-7</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>7</td>
+                            <td>A-8</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+
+                        <!-- B BLOCK -->
+
+                        <tr>
+                            <td>8</td>
+                            <td>B-2</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>9</td>
+                            <td>B-4</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>10</td>
+                            <td>B-5</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>11</td>
+                            <td>B-6</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>12</td>
+                            <td>B-7</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>13</td>
+                            <td>B-8</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+
+                        <!-- C BLOCK -->
+
+                        <tr>
+                            <td>14</td>
+                            <td>C-2</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>15</td>
+                            <td>C-3</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>16</td>
+                            <td>C-4</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>17</td>
+                            <td>C-5</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>18</td>
+                            <td>C-6</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>19</td>
+                            <td>C-7</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>20</td>
+                            <td>C-8</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+
+                        <!-- D BLOCK -->
+
+                        <tr>
+                            <td>21</td>
+                            <td>D-1</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>22</td>
+                            <td>D-2</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>23</td>
+                            <td>D-3</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>24</td>
+                            <td>D-4</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>25</td>
+                            <td>D-5</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>26</td>
+                            <td>D-6</td>
+                            <td></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>⚪ Vacant</td>
+                        </tr>
+
+                        <tr>
+                            <td>27</td>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
