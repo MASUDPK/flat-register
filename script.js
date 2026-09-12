@@ -5277,6 +5277,146 @@ function sendBillWhatsApp() {
 // ============================================================
 // 🔴 END PAYMENT FORM + BILL WHATSAPP - PART 6
 // ============================================================
+
+// ============================================================
+// 🟢 START PAYMENT CALCULATION + STATUS FIX - PART 7
+// ============================================================
+
+
+// ============================================================
+// 💰 GET CURRENT MONTH PAYMENT
+// ============================================================
+
+function getCurrentMonthPayment(flatName) {
+
+    const data =
+        flatData[flatName];
+
+    if (!data) {
+        return null;
+    }
+
+
+    const month =
+        document.getElementById("billMonth")?.value ||
+        new Date().toISOString().slice(0, 7);
+
+
+    if (
+        !Array.isArray(data.rentHistory)
+    ) {
+        data.rentHistory = [];
+    }
+
+
+    return data.rentHistory.find(
+        item =>
+            item.month === month
+    ) || null;
+
+}
+
+
+
+// ============================================================
+// 💰 GET BILL SUMMARY
+// ============================================================
+
+function getBillSummary(flatName) {
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data) {
+        return null;
+    }
+
+
+    const rent =
+        Number(data.rent) || 0;
+
+
+    const other =
+        Number(data.other) || 0;
+
+
+    const total =
+        rent + other;
+
+
+    const payment =
+        getCurrentMonthPayment(
+            flatName
+        );
+
+
+    const paid =
+        payment
+            ? Number(payment.paid || 0)
+            : 0;
+
+
+    const due =
+        Math.max(
+            total - paid,
+            0
+        );
+
+
+    return {
+
+        rent: rent,
+
+        other: other,
+
+        total: total,
+
+        paid: paid,
+
+        due: due
+
+    };
+
+}
+
+
+
+// ============================================================
+// 🔄 REFRESH BILL + DASHBOARD
+// ============================================================
+
+function refreshBillSystem(flatName) {
+
+    if (!flatName) {
+        return;
+    }
+
+
+    updateFlatDetailsStatus(
+        flatName
+    );
+
+
+    renderFlatTable();
+
+
+    updateDashboard();
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+}
+
+
+
+// ============================================================
+// 🔴 END PAYMENT CALCULATION + STATUS FIX - PART 7
+// ============================================================
+
 // ==========================================
 // START - APP INITIALIZATION
 // ==========================================
