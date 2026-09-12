@@ -1066,13 +1066,13 @@ function openTenant() {
     box.id =
         "tenantBox";
 
-   box.innerHTML = `
-
-        <div class="tenant-overlay">
-
-            <div class="tenant-panel">
-
-                <div class="tenant-header">
+    box.innerHTML = `
+    
+        <div class="rent-overlay">
+    
+            <div class="rent-panel">
+    
+                <div class="rent-header">
 
                     <button
                         onclick="closeTenant()"
