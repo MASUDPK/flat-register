@@ -1041,7 +1041,7 @@ function closeEditBox() {
 // ==========================================
 
 
-```javascript
+
 function openTenant() {
 
     const flatName =
@@ -1066,7 +1066,7 @@ function openTenant() {
     box.id =
         "tenantBox";
 
-    box.innerHTML = `
+    box.innerHTML = 
 
         <div class="tenant-overlay">
 
@@ -1391,7 +1391,7 @@ function openRent() {
         "rentHistoryBox";
 
 
-    box.innerHTML = `
+    box.innerHTML = 
 
         <div class="rent-overlay">
 
