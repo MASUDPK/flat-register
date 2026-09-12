@@ -404,7 +404,99 @@ button {
     color: #fff;
 }
 
+/* ==========================================
+   CREATE BILL POPUP
+   ========================================== */
 
+.bill-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 15px;
+
+    z-index: 10000;
+}
+
+.bill-panel {
+    width: 100%;
+    max-width: 420px;
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.20);
+
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.bill-panel h2 {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.bill-panel label {
+    display: block;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    margin-top: 12px;
+    margin-bottom: 5px;
+}
+
+.bill-panel input,
+.bill-panel select {
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    background: #fafafa;
+}
+
+.bill-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.bill-actions button {
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 12px;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    background: #eee7da;
+}
+
+.bill-actions button:first-child {
+    background: #333;
+    color: #fff;
+}
 
 /* ==========================================
    OTHER BILLS
