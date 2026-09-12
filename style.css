@@ -497,7 +497,107 @@ button {
     background: #333;
     color: #fff;
 }
+/* ==========================================
+   MONTHLY BILL - CLEAN ALIGNMENT
+   ========================================== */
 
+.bill-paper {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.bill-paper h1 {
+    text-align: center;
+    font-size: 20px;
+    margin: 0 0 4px;
+}
+
+.bill-paper h3 {
+    text-align: center;
+    font-size: 13px;
+    margin: 0 0 12px;
+}
+
+/* Bill information rows */
+.bill-paper .bill-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+
+    min-height: 32px;
+
+    font-size: 14px;
+    margin: 2px 0;
+}
+
+.bill-paper .bill-row span {
+    text-align: left;
+}
+
+.bill-paper .bill-row strong {
+    text-align: right;
+    min-width: 110px;
+
+    font-variant-numeric: tabular-nums;
+}
+
+/* Total */
+.bill-paper .bill-total {
+    font-size: 15px;
+    font-weight: bold;
+    padding: 6px 0;
+}
+
+/* Due */
+.bill-paper .bill-due {
+    font-weight: bold;
+}
+
+/* Line */
+.bill-paper .bill-line {
+    border-top: 1px solid #ddd;
+    margin: 8px 0;
+}
+
+/* Status */
+.bill-paper .bill-status {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+/* Small screen */
+@media (max-width: 480px) {
+
+    .bill-panel {
+        padding: 12px;
+    }
+
+    .bill-paper {
+        padding: 14px;
+    }
+
+    .bill-paper h1 {
+        font-size: 18px;
+    }
+
+    .bill-paper h3 {
+        font-size: 12px;
+    }
+
+    .bill-paper .bill-row {
+        font-size: 13px;
+        min-height: 30px;
+    }
+
+    .bill-paper .bill-row strong {
+        min-width: 100px;
+    }
+}
 /* ==========================================
    OTHER BILLS
    ========================================== */
