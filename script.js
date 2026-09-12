@@ -1077,35 +1077,55 @@ function openOtherBills() {
 // ==========================================
 // START APP
 // ==========================================
-
-// ==========================================
 // LOAD DATA FROM PHONE STORAGE
 // ==========================================
 
 const savedData =
-    localStorage.getItem("flatRegisterData");
-
+localStorage.getItem("flatRegisterData");
 
 if (savedData) {
 
-    flatData =
-        JSON.parse(savedData);
+    // পুরোনো ডাটা আগে রাখি
+    const oldData = JSON.parse(savedData);
 
-}
+    // সব 28 ফ্ল্যাটের নতুন empty data তৈরি
+    createFlatData();
 
-else {
+    // পুরোনো যে ফ্ল্যাটগুলোর data আছে,
+    // সেগুলো আবার ফিরিয়ে দিই
+    FLATS.forEach(flat => {
 
+        if (oldData[flat]) {
+            flatData[flat] = {
+                ...flatData[flat],
+                ...oldData[flat]
+            };
+        }
+
+    });
+
+    // নতুন 28 ফ্ল্যাটসহ সব data save
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+} else {
+
+    // প্রথমবার হলে 28 ফ্ল্যাট তৈরি
     createFlatData();
 
     localStorage.setItem(
         "flatRegisterData",
         JSON.stringify(flatData)
     );
-
 }
 
-
 updateDashboard();
+
+// ==========================================
+// END APP
+// ==========================================
 
 
 
