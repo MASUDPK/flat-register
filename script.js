@@ -5417,6 +5417,294 @@ function refreshBillSystem(flatName) {
 // 🔴 END PAYMENT CALCULATION + STATUS FIX - PART 7
 // ============================================================
 
+// ============================================================
+// 🟢 START BILL SUMMARY + PAYMENT DISPLAY - PART 8
+// ============================================================
+
+
+// ============================================================
+// 🧾 GET BILL PAYMENT DETAILS
+// ============================================================
+
+function getBillPaymentDetails(flatName) {
+
+    const data =
+        flatData[flatName];
+
+    if (!data) {
+        return null;
+    }
+
+
+    const rent =
+        Number(data.rent) || 0;
+
+    const other =
+        Number(data.other) || 0;
+
+    const total =
+        rent + other;
+
+
+    const month =
+        document.getElementById("billMonth")?.value ||
+        new Date().toISOString().slice(0, 7);
+
+
+    let payment =
+        null;
+
+
+    if (
+        Array.isArray(data.rentHistory)
+    ) {
+
+        payment =
+            data.rentHistory.find(
+                item =>
+                    item.month === month
+            );
+
+    }
+
+
+    const paid =
+        payment
+            ? Number(payment.paid || 0)
+            : 0;
+
+
+    const due =
+        Math.max(
+            total - paid,
+            0
+        );
+
+
+    let status =
+        "DUE";
+
+
+    if (total <= 0) {
+
+        status = "NO BILL";
+
+    }
+
+    else if (due <= 0) {
+
+        status = "PAID";
+
+    }
+
+
+    return {
+
+        month: month,
+
+        rent: rent,
+
+        other: other,
+
+        total: total,
+
+        paid: paid,
+
+        due: due,
+
+        status: status
+
+    };
+
+}
+
+
+
+// ============================================================
+// 🧾 SHOW BILL SUMMARY
+// ============================================================
+
+function showBillSummary(flatName) {
+
+    const summary =
+        getBillPaymentDetails(
+            flatName
+        );
+
+
+    if (!summary) {
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // Optional elements
+    // --------------------------------------------------------
+
+    const totalElement =
+        document.getElementById(
+            "billTotal"
+        );
+
+
+    const paidElement =
+        document.getElementById(
+            "billPaid"
+        );
+
+
+    const dueElement =
+        document.getElementById(
+            "billDue"
+        );
+
+
+    const statusElement =
+        document.getElementById(
+            "billStatus"
+        );
+
+
+    if (totalElement) {
+
+        totalElement.textContent =
+            "৳" +
+            summary.total.toFixed(2);
+
+    }
+
+
+    if (paidElement) {
+
+        paidElement.textContent =
+            "৳" +
+            summary.paid.toFixed(2);
+
+    }
+
+
+    if (dueElement) {
+
+        dueElement.textContent =
+            "৳" +
+            summary.due.toFixed(2);
+
+    }
+
+
+    if (statusElement) {
+
+        statusElement.textContent =
+            summary.status;
+
+    }
+
+}
+
+
+
+// ============================================================
+// 💰 UPDATE PAYMENT STATUS
+// ============================================================
+
+function updatePaymentStatus(flatName) {
+
+    const summary =
+        getBillPaymentDetails(
+            flatName
+        );
+
+
+    if (!summary) {
+        return;
+    }
+
+
+    const data =
+        flatData[flatName];
+
+
+    if (
+        summary.status === "PAID"
+    ) {
+
+        data.status =
+            "PAID";
+
+    }
+
+    else if (
+        data.tenant &&
+        data.tenant.trim() !== ""
+    ) {
+
+        data.status =
+            "DUE";
+
+    }
+
+    else {
+
+        data.status =
+            "VACANT";
+
+    }
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+}
+
+
+
+// ============================================================
+// 🔄 REFRESH EVERYTHING
+// ============================================================
+
+function refreshAllBillData(flatName) {
+
+    if (!flatName) {
+        return;
+    }
+
+
+    updatePaymentStatus(
+        flatName
+    );
+
+
+    updateFlatDetailsStatus(
+        flatName
+    );
+
+
+    showBillSummary(
+        flatName
+    );
+
+
+    renderFlatTable();
+
+
+    updateDashboard();
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+}
+
+
+
+// ============================================================
+// 🔴 END BILL SUMMARY + PAYMENT DISPLAY - PART 8
+// ============================================================
+
 // ==========================================
 // START - APP INITIALIZATION
 // ==========================================
