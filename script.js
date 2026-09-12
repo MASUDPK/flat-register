@@ -5049,7 +5049,234 @@ function downloadBillPDF() {
 // ============================================================
 // 🔴 END PAID + PDF SYSTEM - PART 5
 // ============================================================
+// ============================================================
+// 🟢 START PAYMENT FORM + BILL WHATSAPP - PART 6
+// ============================================================
 
+
+// ============================================================
+// 💰 OPEN PAYMENT FORM
+// ============================================================
+
+function openPaymentForm() {
+
+    if (!currentBillFlat) {
+
+        alert("Flat not selected!");
+
+        return;
+    }
+
+
+    const data =
+        flatData[currentBillFlat];
+
+
+    if (!data) {
+
+        alert("Flat data not found!");
+
+        return;
+    }
+
+
+    const rent =
+        Number(data.rent) || 0;
+
+
+    const other =
+        Number(data.other) || 0;
+
+
+    const total =
+        rent + other;
+
+
+    if (total <= 0) {
+
+        alert(
+            "There is no bill amount to pay."
+        );
+
+        return;
+    }
+
+
+    const payment =
+        prompt(
+            "Enter Payment Amount\n\n" +
+            "Flat: " +
+            currentBillFlat +
+            "\n" +
+            "Total Bill: ৳" +
+            total.toFixed(2)
+        );
+
+
+    if (payment === null) {
+
+        return;
+    }
+
+
+    const amount =
+        Number(payment);
+
+
+    if (
+        isNaN(amount) ||
+        amount <= 0
+    ) {
+
+        alert(
+            "Please enter a valid payment amount."
+        );
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // Part 5-এর payBill() ব্যবহার করবে
+    // --------------------------------------------------------
+
+    payBill();
+
+}
+
+
+// ============================================================
+// 📱 SEND BILL BY WHATSAPP
+// ============================================================
+
+function sendBillWhatsApp() {
+
+    if (!currentBillFlat) {
+
+        alert("Flat not selected!");
+
+        return;
+    }
+
+
+    const data =
+        flatData[currentBillFlat];
+
+
+    if (!data) {
+
+        alert("Flat data not found!");
+
+        return;
+    }
+
+
+    const tenant =
+        data.tenant || "Tenant";
+
+
+    const phone =
+        data.tenantPhone || "";
+
+
+    if (!phone) {
+
+        alert(
+            "Tenant mobile number not found."
+        );
+
+        return;
+    }
+
+
+    const month =
+        document.getElementById("billMonth")?.value ||
+        new Date().toISOString().slice(0, 7);
+
+
+    const rent =
+        Number(data.rent) || 0;
+
+
+    const other =
+        Number(data.other) || 0;
+
+
+    const total =
+        rent + other;
+
+
+    const message =
+        "JAMILA BHAVAN-1\n" +
+        "Tenant & Rent Bill\n\n" +
+
+        "Dear " +
+        tenant +
+        ",\n\n" +
+
+        "Flat No      : " +
+        currentBillFlat +
+        "\n" +
+
+        "Billing Month: " +
+        month +
+        "\n" +
+
+        "Monthly Rent : ৳" +
+        rent.toFixed(2) +
+        "\n" +
+
+        "Other Bills  : ৳" +
+        other.toFixed(2) +
+        "\n" +
+
+        "Total Bill   : ৳" +
+        total.toFixed(2) +
+        " Tk";
+
+
+    let whatsappNumber =
+        phone.replace(
+            /\D/g,
+            ""
+        );
+
+
+    // --------------------------------------------------------
+    // Bangladesh number হলে 0 → 88
+    // --------------------------------------------------------
+
+    if (
+        whatsappNumber.startsWith("0")
+    ) {
+
+        whatsappNumber =
+            "88" +
+            whatsappNumber;
+
+    }
+
+
+    const whatsappURL =
+        "https://wa.me/" +
+        whatsappNumber +
+        "?text=" +
+        encodeURIComponent(
+            message
+        );
+
+
+    window.open(
+        whatsappURL,
+        "_blank"
+    );
+
+}
+
+
+// ============================================================
+// 🔴 END PAYMENT FORM + BILL WHATSAPP - PART 6
+// ============================================================
 // ==========================================
 // START - APP INITIALIZATION
 // ==========================================
