@@ -726,114 +726,142 @@ function saveFlatEdit() {
 
 
     // ======================================
-    // UPDATE TENANT NAME
-    // ======================================
+// ==========================================
+// SAVE EDITED FLAT
+// ==========================================
 
-    document
-        .getElementById("detailsTenantName")
-        .textContent =
-        flat.tenant || "No Tenant";
+function saveFlatEdit() {
 
-
-    // ======================================
-    // UPDATE PAYMENT STATUS
-    // ======================================
-
-    const statusElement =
-        document.getElementById("detailsStatus");
-
-
-    if (!flat.tenant) {
-
-        flat.status = "VACANT";
-
-        statusElement.textContent =
-            "⚪ VACANT";
-
+    if (!selectedFlatForEdit) {
+        alert("Flat not selected.");
+        return;
     }
 
-    else {
+    // Exact flat key
+    const flatKey = FLATS.find(
+        flat => flat === selectedFlatForEdit
+    );
 
-        let currentMonthPaid = false;
+    if (!flatKey) {
+        alert("Flat not found.");
+        return;
+    }
 
+    const data = flatData[flatKey];
 
-        if (Array.isArray(flat.rentHistory)) {
-
-            const currentMonth =
-                new Date()
-                .toISOString()
-                .slice(0, 7);
-
-
-            const currentRent =
-                flat.rentHistory.find(
-                    item =>
-                        item.month === currentMonth
-                );
-
-
-            if (
-                currentRent &&
-                currentRent.status === "PAID"
-            ) {
-
-                currentMonthPaid = true;
-
-            }
-
-        }
-
-
-        if (currentMonthPaid) {
-
-            flat.status = "PAID";
-
-            statusElement.textContent =
-                "🟢 PAID";
-
-        }
-
-        else {
-
-            flat.status = "DUE";
-
-            statusElement.textContent =
-                "🔴 DUE";
-
-        }
-
+    if (!data) {
+        alert("Flat data not found.");
+        return;
     }
 
 
-    // ======================================
-    // FINAL SAVE
-    // ======================================
+    // ==========================================
+    // GET EDITED INFORMATION
+    // ==========================================
+
+    const tenant =
+        document.getElementById("editTenant").value.trim();
+
+    const phone =
+        document.getElementById("editPhone").value.trim();
+
+    const identity =
+        document.getElementById("editIdentity").value.trim();
+
+    const joinDate =
+        document.getElementById("editJoinDate").value;
+
+    const rent =
+        Number(document.getElementById("editRent").value) || 0;
+
+
+    // ==========================================
+    // SAVE INFORMATION
+    // ==========================================
+
+    data.tenant = tenant;
+
+    data.tenantPhone = phone;
+
+    data.tenantIdentity = identity;
+
+    data.tenantJoinDate = joinDate;
+
+    data.rent = rent;
+
+
+    // ==========================================
+    // SAVE TO LOCAL STORAGE
+    // ==========================================
 
     localStorage.setItem(
         "flatRegisterData",
         JSON.stringify(flatData)
     );
 
-}
-// ==========================================
-// CLOSE EDIT BOX
-// ==========================================
 
-function closeEditBox() {
+    // ==========================================
+    // CLOSE EDIT BOX
+    // ==========================================
 
-    const editBox =
-        document.getElementById("editBox");
+    closeEditBox();
 
-    if (editBox) {
-        editBox.remove();
+
+    // ==========================================
+    // UPDATE DETAILS SCREEN
+    // ==========================================
+
+    const tenantNameElement =
+        document.getElementById("detailsTenantName");
+
+    if (tenantNameElement) {
+        tenantNameElement.textContent =
+            data.tenant || "VACANT";
     }
 
+
+    // ==========================================
+    // UPDATE FLAT STATUS
+    // ==========================================
+
+    let status = "VACANT";
+
+    if (data.tenant) {
+
+        status = "DUE";
+
+        // Check rent history
+        if (
+            data.rentHistory &&
+            data.rentHistory.length > 0
+        ) {
+
+            const latestPayment =
+                data.rentHistory[
+                    data.rentHistory.length - 1
+                ];
+
+            if (
+                latestPayment &&
+                latestPayment.status === "PAID"
+            ) {
+                status = "PAID";
+            }
+        }
+    }
+
+    data.status = status;
+
+
+    // ==========================================
+    // REFRESH TABLE & DASHBOARD
+    // ==========================================
+
+    renderFlatTable();
+
+    updateDashboard();
+
 }
-
-// ==========================================
-// FUTURE OPTIONS
-// ==========================================
-
 // ==========================================
 // TENANT INFORMATION
 // ==========================================
