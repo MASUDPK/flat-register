@@ -2575,7 +2575,7 @@ function openRent() {
     box.id = "rentHistoryBox";
 
 
-    box.innerHTML = 
+   box.innerHTML = `
 
         <div class="rent-overlay">
 
