@@ -2213,3 +2213,1193 @@ function renderTenantHistory(flatName) {
 // ==========================================
 // END - SHOW TENANT HISTORY
 // ==========================================
+
+
+// ==========================================
+// ADD HISTORY FORM
+// ==========================================
+
+function showTenantHistoryForm() {
+
+    const form =
+        document.createElement("div");
+
+    form.id = "tenantHistoryForm";
+
+    form.innerHTML = `
+
+        <div class="history-form">
+
+            <h3>Add Previous Tenant</h3>
+
+            <label>Tenant Name</label>
+
+            <input
+                type="text"
+                id="historyName"
+                placeholder="Tenant name"
+            >
+
+            <label>Mobile Number</label>
+
+            <input
+                type="tel"
+                id="historyPhone"
+                placeholder="Mobile number"
+            >
+
+            <label>Identity</label>
+
+            <input
+                type="text"
+                id="historyIdentity"
+                placeholder="NID / Passport / Other"
+            >
+
+            <label>Join Date</label>
+
+            <input
+                type="date"
+                id="historyJoinDate"
+            >
+
+            <label>Leave Date</label>
+
+            <input
+                type="date"
+                id="historyLeaveDate"
+            >
+
+            <div class="history-form-buttons">
+
+                <button onclick="saveTenantHistory()">
+                    💾 Save
+                </button>
+
+                <button onclick="closeTenantHistoryForm()">
+                    ✖ Cancel
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    document
+        .getElementById("historyBox")
+        .querySelector(".history-panel")
+        .appendChild(form);
+
+}
+
+
+// ==========================================
+// SAVE HISTORY
+// ==========================================
+
+function saveTenantHistory() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent;
+
+    const data =
+        flatData[flatName];
+
+    const name =
+        document
+            .getElementById("historyName")
+            .value
+            .trim();
+
+    const phone =
+        document
+            .getElementById("historyPhone")
+            .value
+            .trim();
+
+    const identity =
+        document
+            .getElementById("historyIdentity")
+            .value
+            .trim();
+
+    const joinDate =
+        document
+            .getElementById("historyJoinDate")
+            .value;
+
+    const leaveDate =
+        document
+            .getElementById("historyLeaveDate")
+            .value;
+
+
+    if (!name) {
+
+        alert("Please enter tenant name.");
+
+        return;
+    }
+
+
+    data.tenantHistory.push({
+
+        name: name,
+
+        phone: phone,
+
+        identity: identity,
+
+        joinDate: joinDate,
+
+        leaveDate: leaveDate
+
+    });
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    closeTenantHistoryForm();
+
+    renderTenantHistory(flatName);
+
+}
+
+
+// ==========================================
+// DELETE HISTORY
+// ==========================================
+
+function deleteTenantHistory(index) {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent;
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data || !data.tenantHistory[index]) {
+
+        return;
+    }
+
+
+    const tenantName =
+        data.tenantHistory[index].name;
+
+
+    if (!confirm(
+        `Delete history of "${tenantName}"?`
+    )) {
+
+        return;
+    }
+
+
+    data.tenantHistory.splice(index, 1);
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    renderTenantHistory(flatName);
+
+}
+
+
+// ==========================================
+// CLOSE HISTORY
+// ==========================================
+
+function closeHistory() {
+
+    const box =
+        document.getElementById("historyBox");
+
+    if (box) {
+
+        box.remove();
+
+    }
+
+}
+
+
+// ==========================================
+// CLOSE HISTORY FORM
+// ==========================================
+
+function closeTenantHistoryForm() {
+
+    const form =
+        document.getElementById("tenantHistoryForm");
+
+    if (form) {
+
+        form.remove();
+
+    }
+
+}
+
+
+// ==========================================
+// END TENANT HISTORY SYSTEM
+// ==========================================
+
+
+
+// ==========================================
+// START RENT HISTORY SYSTEM
+// ==========================================
+
+function openRent() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent;
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data) {
+
+        alert("Flat data not found.");
+
+        return;
+    }
+
+
+    if (!Array.isArray(data.rentHistory)) {
+
+        data.rentHistory = [];
+
+    }
+
+
+    const box =
+        document.createElement("div");
+
+    box.id = "rentHistoryBox";
+
+
+    box.innerHTML = `
+
+        <div class="rent-overlay">
+
+            <div class="rent-panel">
+
+                <div class="rent-header">
+
+                    <button onclick="closeRentHistory()">
+                        ← Back
+                    </button>
+
+                    <h2>Rent History</h2>
+
+                    <span></span>
+
+                </div>
+
+
+                <h3>
+                    ${escapeHTML(data.flat)}
+                </h3>
+
+
+                <div class="current-rent-box">
+
+                    <span>
+                        Monthly Rent
+                    </span>
+
+                    <strong>
+                        ৳${Number(
+                            data.rent || 0
+                        ).toLocaleString()}
+                    </strong>
+
+                </div>
+
+
+                <div id="rentHistoryList"></div>
+
+
+                <button
+                    class="add-rent-btn"
+                    onclick="showRentForm()">
+
+                    ➕ Add Rent
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+
+    document.body.appendChild(box);
+
+    renderRentHistory(flatName);
+
+}
+
+
+// ==========================================
+// SHOW RENT HISTORY
+// ==========================================
+
+function renderRentHistory(flatName) {
+
+    const data =
+        flatData[flatName];
+
+    const list =
+        document.getElementById(
+            "rentHistoryList"
+        );
+
+
+    if (!list) {
+
+        return;
+    }
+
+
+    list.innerHTML = "";
+
+
+    if (data.rentHistory.length === 0) {
+
+        list.innerHTML = `
+
+            <div class="empty-rent">
+
+                No rent history
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    data.rentHistory.forEach(
+        (rent, index) => {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "rent-item";
+
+
+            const statusClass =
+                rent.status === "PAID"
+                    ? "rent-paid"
+                    : "rent-due";
+
+
+            const statusText =
+                rent.status === "PAID"
+                    ? "🟢 PAID"
+                    : "🔴 DUE";
+
+
+            item.innerHTML = `
+
+                <div class="rent-info">
+
+                    <strong>
+
+                        ${escapeHTML(
+                            rent.month
+                        )}
+
+                    </strong>
+
+
+                    <span>
+
+                        Rent:
+                        ৳${Number(
+                            rent.amount
+                        ).toLocaleString()}
+
+                    </span>
+
+
+                    ${
+                        rent.paidDate
+
+                        ? `
+
+                            <span>
+
+                                Paid:
+                                ${escapeHTML(
+                                    rent.paidDate
+                                )}
+
+                            </span>
+
+                        `
+
+                        : ""
+                    }
+
+                </div>
+
+
+                <div class="rent-right">
+
+                    <span
+                        class="${statusClass}">
+
+                        ${statusText}
+
+                    </span>
+
+
+                    <button
+                        class="delete-rent-btn"
+                        onclick="deleteRentHistory(${index})">
+
+                        🗑️
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            list.appendChild(item);
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// ADD RENT FORM
+// ==========================================
+
+function showRentForm() {
+
+    const form =
+        document.createElement("div");
+
+    form.id = "rentForm";
+
+
+    form.innerHTML = `
+
+        <div class="rent-form">
+
+            <h3>
+                Add Rent
+            </h3>
+
+
+            <label>
+                Month
+            </label>
+
+
+            <input
+                type="month"
+                id="rentMonth"
+            >
+
+
+            <label>
+                Rent Amount
+            </label>
+
+
+            <input
+                type="number"
+                id="rentAmount"
+                placeholder="Rent amount"
+                inputmode="numeric"
+            >
+
+
+            <label>
+                Status
+            </label>
+
+
+            <select id="rentStatus">
+
+                <option value="DUE">
+                    🔴 DUE
+                </option>
+
+                <option value="PAID">
+                    🟢 PAID
+                </option>
+
+            </select>
+
+
+            <label>
+                Paid Date
+            </label>
+
+
+            <input
+                type="date"
+                id="rentPaidDate"
+            >
+
+
+            <div class="rent-form-buttons">
+
+                <button
+                    onclick="saveRentHistory()">
+
+                    💾 Save
+
+                </button>
+
+
+                <button
+                    onclick="closeRentForm()">
+
+                    ✖ Cancel
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+
+    document
+        .getElementById("rentHistoryBox")
+        .querySelector(".rent-panel")
+        .appendChild(form);
+
+}
+
+
+// ==========================================
+// SAVE RENT
+// ==========================================
+
+function saveRentHistory() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent;
+
+    const data =
+        flatData[flatName];
+
+
+    const month =
+        document
+            .getElementById("rentMonth")
+            .value;
+
+
+    const amount =
+        Number(
+            document
+                .getElementById("rentAmount")
+                .value
+        ) || 0;
+
+
+    const status =
+        document
+            .getElementById("rentStatus")
+            .value;
+
+
+    const paidDate =
+        document
+            .getElementById("rentPaidDate")
+            .value;
+
+
+    if (!month) {
+
+        alert(
+            "Please select month."
+        );
+
+        return;
+    }
+
+
+    if (amount <= 0) {
+
+        alert(
+            "Please enter rent amount."
+        );
+
+        return;
+    }
+
+
+    if (
+        status === "PAID" &&
+        !paidDate
+    ) {
+
+        alert(
+            "Please select paid date."
+        );
+
+        return;
+    }
+
+
+    if (
+        !Array.isArray(
+            data.rentHistory
+        )
+    ) {
+
+        data.rentHistory = [];
+
+    }
+
+
+    // একই মাস আগে আছে কিনা
+    const existing =
+        data.rentHistory.find(
+            item =>
+                item.month === month
+        );
+
+
+    if (existing) {
+
+        alert(
+            "This month's rent already exists."
+        );
+
+        return;
+    }
+
+
+    data.rentHistory.push({
+
+        month: month,
+
+        amount: amount,
+
+        status: status,
+
+        paidDate:
+            status === "PAID"
+                ? paidDate
+                : ""
+
+    });
+
+
+    // নতুন করে সাজানো
+    data.rentHistory.sort(
+        (a, b) =>
+            b.month.localeCompare(
+                a.month
+            )
+    );
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    closeRentForm();
+
+    renderRentHistory(flatName);
+
+}
+
+
+// ==========================================
+// DELETE RENT
+// ==========================================
+
+function deleteRentHistory(index) {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent;
+
+    const data =
+        flatData[flatName];
+
+
+    if (
+        !data ||
+        !data.rentHistory[index]
+    ) {
+
+        return;
+    }
+
+
+    const month =
+        data.rentHistory[index].month;
+
+
+    if (!confirm(
+        `Delete rent for ${month}?`
+    )) {
+
+        return;
+    }
+
+
+    data.rentHistory.splice(
+        index,
+        1
+    );
+
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    renderRentHistory(flatName);
+
+}
+
+
+// ==========================================
+// CLOSE RENT HISTORY
+// ==========================================
+
+function closeRentHistory() {
+
+    const box =
+        document.getElementById(
+            "rentHistoryBox"
+        );
+
+
+    if (box) {
+
+        box.remove();
+
+    }
+
+}
+
+
+// ==========================================
+// CLOSE RENT FORM
+// ==========================================
+
+function closeRentForm() {
+
+    const form =
+        document.getElementById(
+            "rentForm"
+        );
+
+
+    if (form) {
+
+        form.remove();
+
+    }
+
+}
+
+
+// ==========================================
+// END RENT HISTORY SYSTEM
+// ==========================================
+
+
+
+// ==========================================
+// START RECEIPT SYSTEM
+// ==========================================
+
+function openReceipt() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent;
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data) {
+
+        alert("Flat data not found.");
+
+        return;
+    }
+
+
+    if (!Array.isArray(data.otherBills)) {
+
+        data.otherBills = [];
+
+    }
+
+
+    const otherTotal =
+        data.otherBills.reduce(
+            (sum, bill) =>
+                sum +
+                (
+                    Number(
+                        bill.amount
+                    ) || 0
+                ),
+            0
+        );
+
+
+    const rent =
+        Number(data.rent) || 0;
+
+
+    const total =
+        rent + otherTotal;
+
+
+    const receiptDate =
+        new Date()
+            .toLocaleDateString(
+                "en-GB"
+            );
+
+
+    const box =
+        document.createElement("div");
+
+    box.id = "receiptBox";
+
+
+    box.innerHTML = `
+
+        <div class="receipt-overlay">
+
+            <div class="receipt-panel">
+
+                <div class="receipt-top">
+
+                    <button
+                        onclick="closeReceipt()">
+
+                        ← Back
+
+                    </button>
+
+
+                    <h2>
+                        Receipt
+                    </h2>
+
+
+                    <span></span>
+
+                </div>
+
+
+                <div id="receiptContent">
+
+                    <div class="receipt-paper">
+
+                        <h1>
+                            JAMILA BHAVAN
+                        </h1>
+
+
+                        <h3>
+                            RENT & BILL RECEIPT
+                        </h3>
+
+
+                        <div
+                            class="receipt-line">
+                        </div>
+
+
+                        <div class="receipt-row">
+
+                            <span>
+                                Flat
+                            </span>
+
+
+                            <strong>
+                                ${escapeHTML(
+                                    data.flat
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="receipt-row">
+
+                            <span>
+                                Tenant
+                            </span>
+
+
+                            <strong>
+                                ${escapeHTML(
+                                    data.tenant ||
+                                    "No Tenant"
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="receipt-row">
+
+                            <span>
+                                Date
+                            </span>
+
+
+                            <strong>
+                                ${receiptDate}
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="receipt-line">
+                        </div>
+
+
+                        <div class="receipt-row">
+
+                            <span>
+                                Rent
+                            </span>
+
+
+                            <strong>
+                                ৳${rent.toLocaleString()}
+                            </strong>
+
+                        </div>
+
+
+                        <h4
+                            class="receipt-subtitle">
+
+                            Other Bills
+
+                        </h4>
+
+
+                        ${
+                            data.otherBills.length > 0
+
+                            ?
+
+                            data.otherBills
+                                .map(
+                                    bill => `
+
+                                        <div
+                                            class="receipt-row">
+
+                                            <span>
+                                                ${escapeHTML(
+                                                    bill.name
+                                                )}
+                                            </span>
+
+
+                                            <strong>
+                                                ৳${Number(
+                                                    bill.amount
+                                                ).toLocaleString()}
+                                            </strong>
+
+                                        </div>
+
+                                    `
+                                )
+                                .join("")
+
+                            :
+
+                            `
+
+                                <div
+                                    class="receipt-empty">
+
+                                    No Other Bills
+
+                                </div>
+
+                            `
+                        }
+
+
+                        <div
+                            class="receipt-line">
+                        </div>
+
+
+                        <div
+                            class="receipt-total">
+
+                            <span>
+                                TOTAL
+                            </span>
+
+
+                            <strong>
+                                ৳${total.toLocaleString()}
+                            </strong>
+
+                        </div>
+
+
+                        <div
+                            class="receipt-status">
+
+                            ${
+                                data.status === "PAID"
+
+                                    ? "🟢 PAID"
+
+                                    : data.status === "DUE"
+
+                                    ? "🔴 DUE"
+
+                                    : "⚪ VACANT"
+                            }
+
+                        </div>
+
+
+                        <div
+                            class="receipt-footer">
+
+                            Thank you
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="receipt-actions">
+
+                    <button
+                        onclick="sendReceiptWhatsApp()">
+
+                        📱 WhatsApp
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+
+    document.body.appendChild(box);
+
+}
+
+
+// ==========================================
+// CLOSE RECEIPT
+// ==========================================
+
+function closeReceipt() {
+
+    const receiptBox =
+        document.getElementById(
+            "receiptBox"
+        );
+
+
+    if (receiptBox) {
+
+        receiptBox.remove();
+
+    }
+
+
+    const detailsScreen =
+        document.getElementById(
+            "flatDetailsScreen"
+        );
+
+
+    if (detailsScreen) {
+
+        detailsScreen.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+    const listScreen =
+        document.getElementById(
+            "flatListScreen"
+        );
+
+
+    if (listScreen) {
+
+        listScreen.classList.add(
+            "hidden"
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// END RECEIPT SYSTEM
+// ==========================================
+
+
