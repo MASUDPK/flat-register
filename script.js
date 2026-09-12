@@ -885,83 +885,194 @@ function openTenant() {
     box.innerHTML = `
         <div class="tenant-overlay">
 
-            <div class="tenant-panel">
+// ==========================================
+// SAVE EDITED DATA
+// ==========================================
 
-                <div class="tenant-header">
+function saveFlatEdit() {
 
-                    <button onclick="closeTenant()">
-                        ← Back
-                    </button>
+    // Get selected flat safely
+    let flatName = selectedFlatForEdit;
 
-                    <h2>Tenant</h2>
+    if (!flatName) {
 
-                    <span></span>
+        flatName =
+            document
+                .getElementById("detailsFlatName")
+                .textContent
+                .trim();
+    }
 
-                </div>
+    // Find exact flat
+    const flatKey =
+        FLATS.find(
+            flat => flat.trim() === flatName.trim()
+        );
 
-                <h3>${escapeHTML(data.flat)}</h3>
+    if (!flatKey) {
 
-                <div class="tenant-form">
+        alert("Flat name not found: " + flatName);
 
-                    <label>Tenant Name</label>
+        return;
+    }
 
-                    <input
-                        type="text"
-                        id="tenantName"
-                        value="${escapeHTML(data.tenant || "")}"
-                        placeholder="Tenant name"
-                    >
+    // Get flat data
+    const flat = flatData[flatKey];
 
-                    <label>Mobile Number</label>
+    if (!flat) {
 
-                    <input
-                        type="tel"
-                        id="tenantPhone"
-                        value="${escapeHTML(data.tenantPhone || "")}"
-                        placeholder="Mobile number"
-                        inputmode="tel"
-                    >
+        alert("Flat data not found: " + flatKey);
 
-                    <label>Identity</label>
+        return;
+    }
 
-                    <input
-                        type="text"
-                        id="tenantIdentity"
-                        value="${escapeHTML(data.tenantIdentity || "")}"
-                        placeholder="NID / Passport / Other"
-                    >
+    // Keep selected flat correct
+    selectedFlatForEdit = flatKey;
 
-                    <label>Joining Date</label>
 
-                    <input
-                        type="date"
-                        id="tenantJoinDate"
-                        value="${data.tenantJoinDate || ""}"
-                    >
+    // ======================================
+    // TENANT NAME
+    // ======================================
 
-                    <div class="tenant-buttons">
+    const tenantInput =
+        document.getElementById("editTenant");
 
-                        <button onclick="saveTenant()">
-                            💾 Save
-                        </button>
+    if (tenantInput) {
 
-                        <button onclick="closeTenant()">
-                            ✖ Cancel
-                        </button>
+        flat.tenant =
+            tenantInput.value.trim();
+    }
 
-                    </div>
 
-                </div>
+    // ======================================
+    // MOBILE NUMBER
+    // ======================================
 
-            </div>
+    const phoneInput =
+        document.getElementById("editPhone");
 
-        </div>
-    `;
+    if (phoneInput) {
 
-    document.body.appendChild(box);
+        flat.tenantPhone =
+            phoneInput.value.trim();
+    }
+
+
+    // ======================================
+    // IDENTITY / NID
+    // ======================================
+
+    const identityInput =
+        document.getElementById("editIdentity");
+
+    if (identityInput) {
+
+        flat.tenantIdentity =
+            identityInput.value.trim();
+    }
+
+
+    // ======================================
+    // JOINING DATE
+    // ======================================
+
+    const joinDateInput =
+        document.getElementById("editJoinDate");
+
+    if (joinDateInput) {
+
+        flat.tenantJoinDate =
+            joinDateInput.value;
+    }
+
+
+    // ======================================
+    // RENT
+    // ======================================
+
+    const rentInput =
+        document.getElementById("editRent");
+
+    if (rentInput) {
+
+        flat.rent =
+            Number(rentInput.value) || 0;
+    }
+
+
+    // ======================================
+    // SAVE DATA
+    // ======================================
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    // ======================================
+    // CLOSE EDIT BOX
+    // ======================================
+
+    closeEditBox();
+
+
+    // ======================================
+    // UPDATE DETAILS
+    // ======================================
+
+    const tenantNameElement =
+        document.getElementById("detailsTenantName");
+
+    if (tenantNameElement) {
+
+        tenantNameElement.textContent =
+            flat.tenant || "VACANT";
+    }
+
+
+    // ======================================
+    // UPDATE STATUS
+    // ======================================
+
+    let status = "VACANT";
+
+    if (flat.tenant) {
+
+        status = "DUE";
+
+        if (
+            flat.rentHistory &&
+            flat.rentHistory.length > 0
+        ) {
+
+            const latestPayment =
+                flat.rentHistory[
+                    flat.rentHistory.length - 1
+                ];
+
+            if (
+                latestPayment &&
+                latestPayment.status === "PAID"
+            ) {
+
+                status = "PAID";
+            }
+        }
+    }
+
+    flat.status = status;
+
+
+    // ======================================
+    // REFRESH TABLE & DASHBOARD
+    // ======================================
+
+    renderFlatTable();
+
+    updateDashboard();
+
 }
-
-
 // ==========================================
 // SAVE TENANT
 // ==========================================
