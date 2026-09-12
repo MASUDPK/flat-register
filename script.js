@@ -1092,3 +1092,1124 @@ function openTenant() {
 // ==========================================
 // END - TENANT INFORMATION
 // ==========================================
+
+
+
+
+// ==========================================
+// START - SAVE TENANT
+// ==========================================
+
+function saveTenant() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent
+            .trim();
+
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data) {
+
+        alert("Flat data not found.");
+
+        return;
+
+    }
+
+
+    const name =
+        document
+            .getElementById("tenantName")
+            .value
+            .trim();
+
+
+    const phone =
+        document
+            .getElementById("tenantPhone")
+            .value
+            .trim();
+
+
+    const identity =
+        document
+            .getElementById("tenantIdentity")
+            .value
+            .trim();
+
+
+    const joinDate =
+        document
+            .getElementById("tenantJoinDate")
+            .value;
+
+
+    if (!name) {
+
+        alert("Please enter tenant name.");
+
+        return;
+
+    }
+
+
+    // ======================================
+    // SAVE TENANT INFORMATION
+    // ======================================
+
+    data.tenant =
+        name;
+
+    data.tenantPhone =
+        phone;
+
+    data.tenantIdentity =
+        identity;
+
+    data.tenantJoinDate =
+        joinDate;
+
+
+    // Tenant থাকলে Flat আর Vacant থাকবে না
+
+    if (data.status === "VACANT") {
+
+        data.status =
+            "DUE";
+
+    }
+
+
+    // ======================================
+    // SAVE TO LOCAL STORAGE
+    // ======================================
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    // ======================================
+    // UPDATE DETAILS SCREEN
+    // ======================================
+
+    document
+        .getElementById("detailsTenantName")
+        .textContent =
+            data.tenant;
+
+
+    const statusElement =
+        document.getElementById(
+            "detailsStatus"
+        );
+
+
+    if (data.status === "PAID") {
+
+        statusElement.textContent =
+            "🟢 PAID";
+
+    }
+
+    else {
+
+        statusElement.textContent =
+            "🔴 DUE";
+
+    }
+
+
+    // ======================================
+    // CLOSE TENANT BOX
+    // ======================================
+
+    closeTenant();
+
+
+    // ======================================
+    // REFRESH TABLE
+    // ======================================
+
+    renderFlatTable();
+
+}
+
+// ==========================================
+// END - SAVE TENANT
+// ==========================================
+
+
+// ==========================================
+// START - CLOSE TENANT
+// ==========================================
+
+function closeTenant() {
+
+    const box =
+        document.getElementById(
+            "tenantBox"
+        );
+
+
+    if (box) {
+
+        box.remove();
+
+    }
+
+}
+
+// ==========================================
+// END - CLOSE TENANT
+// ==========================================
+
+
+// ==========================================
+// START - RENT HISTORY SYSTEM
+// ==========================================
+
+function openRent() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent
+            .trim();
+
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data) {
+
+        alert("Flat data not found.");
+
+        return;
+
+    }
+
+
+    if (!Array.isArray(data.rentHistory)) {
+
+        data.rentHistory = [];
+
+    }
+
+
+    const box =
+        document.createElement("div");
+
+
+    box.id =
+        "rentHistoryBox";
+
+
+    box.innerHTML = `
+
+        <div class="rent-overlay">
+
+            <div class="rent-panel">
+
+                <div class="rent-header">
+
+                    <button
+                        onclick="closeRentHistory()"
+                    >
+                        ← Back
+                    </button>
+
+
+                    <h2>
+                        Rent History
+                    </h2>
+
+
+                    <span></span>
+
+                </div>
+
+
+                <h3>
+                    ${escapeHTML(data.flat)}
+                </h3>
+
+
+                <div class="current-rent-box">
+
+                    <span>
+                        Monthly Rent
+                    </span>
+
+
+                    <strong>
+                        ৳${Number(
+                            data.rent || 0
+                        ).toLocaleString()}
+                    </strong>
+
+                </div>
+
+
+                <div id="rentHistoryList"></div>
+
+
+                <button
+                    class="add-rent-btn"
+                    onclick="showRentForm()"
+                >
+                    ➕ Add Rent
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(box);
+
+
+    renderRentHistory(flatName);
+
+}
+
+// ==========================================
+// END - RENT HISTORY SYSTEM
+// ==========================================
+
+
+// ==========================================
+// START - OTHER BILLS SYSTEM
+// ==========================================
+
+function openOtherBills() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent
+            .trim();
+
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data) {
+
+        alert("Flat data not found.");
+
+        return;
+
+    }
+
+
+    // পুরোনো ডাটায় otherBills না থাকলে তৈরি
+
+    if (!Array.isArray(data.otherBills)) {
+
+        data.otherBills = [];
+
+    }
+
+
+    const oldBox =
+        document.getElementById(
+            "otherBillsBox"
+        );
+
+
+    if (oldBox) {
+
+        oldBox.remove();
+
+    }
+
+
+    const box =
+        document.createElement("div");
+
+
+    box.id =
+        "otherBillsBox";
+
+
+    box.innerHTML = `
+
+        <div class="other-bills-overlay">
+
+            <div class="other-bills-panel">
+
+                <div class="other-bills-header">
+
+                    <button
+                        onclick="closeOtherBills()"
+                    >
+                        ← Back
+                    </button>
+
+
+                    <h2>
+                        Other Bills
+                    </h2>
+
+
+                    <span></span>
+
+                </div>
+
+
+                <h3>
+                    ${escapeHTML(data.flat)}
+                </h3>
+
+
+                <div id="billList"></div>
+
+
+                <button
+                    class="add-bill-btn"
+                    onclick="showAddBillForm()"
+                >
+                    ➕ Add Bill
+                </button>
+
+
+                <div class="other-bill-total">
+
+                    Total Other Bills:
+
+                    ৳<span id="otherBillTotal">
+                        0
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(box);
+
+
+    renderOtherBills(flatName);
+
+}
+
+// ==========================================
+// END - OTHER BILLS SYSTEM
+// ==========================================
+
+
+// ==========================================
+// START - SHOW BILL LIST
+// ==========================================
+
+function renderOtherBills(flatName) {
+
+    const data =
+        flatData[flatName];
+
+
+    const list =
+        document.getElementById(
+            "billList"
+        );
+
+
+    const totalElement =
+        document.getElementById(
+            "otherBillTotal"
+        );
+
+
+    if (!list || !data) {
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        "";
+
+
+    let total =
+        0;
+
+
+    data.otherBills.forEach(
+        (bill, index) => {
+
+            total +=
+                Number(bill.amount) || 0;
+
+
+            const item =
+                document.createElement("div");
+
+
+            item.className =
+                "bill-item";
+
+
+            item.innerHTML = `
+
+                <div class="bill-info">
+
+                    <strong>
+                        ${escapeHTML(bill.name)}
+                    </strong>
+
+
+                    <span>
+                        ৳${Number(
+                            bill.amount
+                        ).toLocaleString()}
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="delete-bill-btn"
+                    onclick="deleteOtherBill(${index})"
+                >
+                    🗑️
+                </button>
+
+            `;
+
+
+            list.appendChild(item);
+
+        }
+    );
+
+
+    totalElement.textContent =
+        total.toLocaleString();
+
+
+    // মূল Flat-এর Other total update
+
+    data.other =
+        total;
+
+
+    // Save
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+}
+
+// ==========================================
+// END - SHOW BILL LIST
+// ==========================================
+
+
+// ==========================================
+// START - ADD BILL FORM
+// ==========================================
+
+function showAddBillForm() {
+
+    const form =
+        document.createElement("div");
+
+
+    form.id =
+        "addBillForm";
+
+
+    form.innerHTML = `
+
+        <div class="add-bill-form">
+
+            <h3>
+                Add Other Bill
+            </h3>
+
+
+            <label>
+                Bill Name
+            </label>
+
+
+            <input
+                type="text"
+                id="newBillName"
+                placeholder="যেমন: Waste Collection Charge"
+            >
+
+
+            <label>
+                Amount
+            </label>
+
+
+            <input
+                type="number"
+                id="newBillAmount"
+                placeholder="Amount"
+                inputmode="numeric"
+            >
+
+
+            <div class="bill-form-buttons">
+
+                <button
+                    onclick="saveOtherBill()"
+                >
+                    💾 Save
+                </button>
+
+
+                <button
+                    onclick="closeAddBillForm()"
+                >
+                    ✖ Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("otherBillsBox")
+        .querySelector(".other-bills-panel")
+        .appendChild(form);
+
+}
+
+// ==========================================
+// END - ADD BILL FORM
+// ==========================================
+
+
+// ==========================================
+// START - SAVE OTHER BILL
+// ==========================================
+
+function saveOtherBill() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent
+            .trim();
+
+
+    const data =
+        flatData[flatName];
+
+
+    const name =
+        document
+            .getElementById("newBillName")
+            .value
+            .trim();
+
+
+    const amount =
+        Number(
+            document
+                .getElementById("newBillAmount")
+                .value
+        ) || 0;
+
+
+    if (!name) {
+
+        alert(
+            "Please enter bill name."
+        );
+
+        return;
+
+    }
+
+
+    if (amount <= 0) {
+
+        alert(
+            "Please enter a valid amount."
+        );
+
+        return;
+
+    }
+
+
+    if (!Array.isArray(data.otherBills)) {
+
+        data.otherBills = [];
+
+    }
+
+
+    data.otherBills.push({
+
+        name:
+            name,
+
+        amount:
+            amount,
+
+        date:
+            new Date().toISOString()
+
+    });
+
+
+    // ======================================
+    // SAVE
+    // ======================================
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    closeAddBillForm();
+
+
+    renderOtherBills(flatName);
+
+
+    // Flat Table update
+
+    renderFlatTable();
+
+}
+
+// ==========================================
+// END - SAVE OTHER BILL
+// ==========================================
+
+
+// ==========================================
+// START - DELETE OTHER BILL
+// ==========================================
+
+function deleteOtherBill(index) {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent
+            .trim();
+
+
+    const data =
+        flatData[flatName];
+
+
+    if (
+        !data ||
+        !data.otherBills[index]
+    ) {
+
+        return;
+
+    }
+
+
+    const billName =
+        data.otherBills[index].name;
+
+
+    const confirmDelete =
+        confirm(
+            `Delete "${billName}"?`
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+    data.otherBills.splice(
+        index,
+        1
+    );
+
+
+    // ======================================
+    // SAVE
+    // ======================================
+
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+
+    renderOtherBills(flatName);
+
+
+    renderFlatTable();
+
+}
+
+// ==========================================
+// END - DELETE OTHER BILL
+// ==========================================
+
+
+// ==========================================
+// START - CLOSE OTHER BILLS
+// ==========================================
+
+function closeOtherBills() {
+
+    const box =
+        document.getElementById(
+            "otherBillsBox"
+        );
+
+
+    if (box) {
+
+        box.remove();
+
+    }
+
+
+    renderFlatTable();
+
+}
+
+// ==========================================
+// END - CLOSE OTHER BILLS
+// ==========================================
+
+
+// ==========================================
+// START - CLOSE ADD BILL FORM
+// ==========================================
+
+function closeAddBillForm() {
+
+    const form =
+        document.getElementById(
+            "addBillForm"
+        );
+
+
+    if (form) {
+
+        form.remove();
+
+    }
+
+}
+
+// ==========================================
+// END - CLOSE ADD BILL FORM
+// ==========================================
+
+
+// ==========================================
+// START - SAFE TEXT
+// ==========================================
+
+function escapeHTML(text) {
+
+    return String(text)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+// ==========================================
+// END - SAFE TEXT
+// ==========================================
+
+
+// ==========================================
+// START - TENANT HISTORY SYSTEM
+// ==========================================
+
+function openHistory() {
+
+    const flatName =
+        document
+            .getElementById("detailsFlatName")
+            .textContent
+            .trim();
+
+
+    const data =
+        flatData[flatName];
+
+
+    if (!data) {
+
+        alert("Flat data not found.");
+
+        return;
+
+    }
+
+
+    // Old data হলে history তৈরি
+
+    if (!Array.isArray(data.tenantHistory)) {
+
+        data.tenantHistory = [];
+
+    }
+
+
+    const box =
+        document.createElement("div");
+
+
+    box.id =
+        "historyBox";
+
+
+    box.innerHTML = `
+
+        <div class="history-overlay">
+
+            <div class="history-panel">
+
+                <div class="history-header">
+
+                    <button
+                        onclick="closeHistory()"
+                    >
+                        ← Back
+                    </button>
+
+
+                    <h2>
+                        Tenant History
+                    </h2>
+
+
+                    <span></span>
+
+                </div>
+
+
+                <h3>
+                    ${escapeHTML(data.flat)}
+                </h3>
+
+
+                <div class="current-tenant-box">
+
+                    <h4>
+                        Current Tenant
+                    </h4>
+
+
+                    <p>
+                        ${escapeHTML(
+                            data.tenant ||
+                            "No Tenant"
+                        )}
+                    </p>
+
+                </div>
+
+
+                <h4 class="history-title">
+                    Previous Tenants
+                </h4>
+
+
+                <div id="tenantHistoryList"></div>
+
+
+                <button
+                    class="add-history-btn"
+                    onclick="showTenantHistoryForm()"
+                >
+                    ➕ Add Previous Tenant
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    document.body.appendChild(box);
+
+
+    renderTenantHistory(flatName);
+
+}
+
+// ==========================================
+// END - TENANT HISTORY SYSTEM
+// ==========================================
+
+
+// ==========================================
+// START - SHOW TENANT HISTORY
+// ==========================================
+
+function renderTenantHistory(flatName) {
+
+    const data =
+        flatData[flatName];
+
+
+    const list =
+        document.getElementById(
+            "tenantHistoryList"
+        );
+
+
+    if (!list) {
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        "";
+
+
+    if (
+        data.tenantHistory.length === 0
+    ) {
+
+        list.innerHTML = `
+
+            <div class="empty-history">
+
+                No previous tenant history
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    data.tenantHistory.forEach(
+        (tenant, index) => {
+
+            const item =
+                document.createElement("div");
+
+
+            item.className =
+                "history-item";
+
+
+            item.innerHTML = `
+
+                <div class="history-info">
+
+                    <strong>
+                        ${escapeHTML(
+                            tenant.name
+                        )}
+                    </strong>
+
+
+                    <span>
+                        📱 ${escapeHTML(
+                            tenant.phone || "—"
+                        )}
+                    </span>
+
+
+                    <span>
+                        🪪 ${escapeHTML(
+                            tenant.identity || "—"
+                        )}
+                    </span>
+
+
+                    <span>
+                        📅 ${escapeHTML(
+                            tenant.joinDate || "—"
+                        )}
+
+                        →
+
+                        ${escapeHTML(
+                            tenant.leaveDate || "—"
+                        )}
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="delete-history-btn"
+                    onclick="deleteTenantHistory(${index})"
+                >
+                    🗑️
+                </button>
+
+            `;
+
+
+            list.appendChild(item);
+
+        }
+    );
+
+}
+
+// ==========================================
+// END - SHOW TENANT HISTORY
+// ==========================================
