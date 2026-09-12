@@ -1066,7 +1066,7 @@ function openTenant() {
     box.id =
         "tenantBox";
 
-    box.innerHTML = 
+   box.innerHTML = `
 
         <div class="tenant-overlay">
 
@@ -1169,7 +1169,6 @@ function openTenant() {
 // ==========================================
 // END - TENANT INFORMATION
 // ==========================================
-```
 
 
 
@@ -1391,7 +1390,7 @@ function openRent() {
         "rentHistoryBox";
 
 
-    box.innerHTML = 
+   box.innerHTML = `
 
         <div class="rent-overlay">
 
@@ -2576,7 +2575,7 @@ function openRent() {
     box.id = "rentHistoryBox";
 
 
-    box.innerHTML = `
+    box.innerHTML = 
 
         <div class="rent-overlay">
 
