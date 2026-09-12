@@ -88,7 +88,103 @@ function createFlatData() {
 // ==========================================
 // END - CREATE EMPTY DATA FOR 28 FLATS
 // ==========================================
+// ==========================================
+// START - INITIALIZE FLAT DATA
+// ==========================================
 
+function initializeFlatData() {
+
+    const savedData =
+        localStorage.getItem("flatRegisterData");
+
+    let oldData = {};
+
+    // Old saved data থাকলে load করবে
+    if (savedData) {
+
+        try {
+
+            oldData =
+                JSON.parse(savedData);
+
+        }
+
+        catch (error) {
+
+            oldData = {};
+
+        }
+
+    }
+
+
+    // সব 28টি Flat নিশ্চিতভাবে তৈরি করবে
+    FLATS.forEach((flat, index) => {
+
+        const old =
+            oldData[flat] || {};
+
+
+        flatData[flat] = {
+
+            id:
+                index + 1,
+
+            flat:
+                flat,
+
+            tenant:
+                old.tenant || "",
+
+            tenantPhone:
+                old.tenantPhone || "",
+
+            tenantIdentity:
+                old.tenantIdentity || "",
+
+            tenantJoinDate:
+                old.tenantJoinDate || "",
+
+            rent:
+                Number(old.rent) || 0,
+
+            other:
+                Number(old.other) || 0,
+
+            otherBills:
+                Array.isArray(old.otherBills)
+                    ? old.otherBills
+                    : [],
+
+            rentHistory:
+                Array.isArray(old.rentHistory)
+                    ? old.rentHistory
+                    : [],
+
+            tenantHistory:
+                Array.isArray(old.tenantHistory)
+                    ? old.tenantHistory
+                    : [],
+
+            status:
+                old.status || "VACANT"
+
+        };
+
+    });
+
+
+    // Save updated 28-flat data
+    localStorage.setItem(
+        "flatRegisterData",
+        JSON.stringify(flatData)
+    );
+
+}
+
+// ==========================================
+// END - INITIALIZE FLAT DATA
+// ==========================================
 
 // ==========================================
 // START - HOME SCREEN
@@ -4954,7 +5050,16 @@ function downloadBillPDF() {
 // 🔴 END PAID + PDF SYSTEM - PART 5
 // ============================================================
 
+// ==========================================
+// START - APP INITIALIZATION
+// ==========================================
 
+initializeFlatData();
+updateDashboard();
+
+// ==========================================
+// END - APP INITIALIZATION
+// ==========================================
 
 
 
