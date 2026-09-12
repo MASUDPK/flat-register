@@ -515,7 +515,7 @@ let selectedFlatForEdit = null;
 function toggleEditMode() {
 
     const flatName =
-        document.getElementById("detailsFlatName").textContent;
+        document.getElementById("detailsFlatName").textContent.trim();
 
     selectedFlatForEdit = flatName;
 
@@ -524,6 +524,13 @@ function toggleEditMode() {
     if (!data) {
         alert("Flat data not found.");
         return;
+    }
+
+    // আগের Edit Box থাকলে remove
+    const oldBox = document.getElementById("editBox");
+
+    if (oldBox) {
+        oldBox.remove();
     }
 
     const editBox =
@@ -538,6 +545,8 @@ function toggleEditMode() {
 
                 <h2>Edit ${data.flat}</h2>
 
+
+                <!-- TENANT NAME -->
                 <label>Tenant Name</label>
 
                 <input
@@ -547,7 +556,42 @@ function toggleEditMode() {
                     placeholder="Tenant name"
                 >
 
-                <label>Rent</label>
+
+                <!-- MOBILE NUMBER -->
+                <label>Mobile Number</label>
+
+                <input
+                    type="tel"
+                    id="editPhone"
+                    value="${data.tenantPhone || ""}"
+                    placeholder="Mobile number"
+                    inputmode="tel"
+                >
+
+
+                <!-- IDENTITY / NID -->
+                <label>NID / Identity Card Number</label>
+
+                <input
+                    type="text"
+                    id="editIdentity"
+                    value="${data.tenantIdentity || ""}"
+                    placeholder="NID / Passport / Other"
+                >
+
+
+                <!-- JOINING DATE -->
+                <label>Joining Date</label>
+
+                <input
+                    type="date"
+                    id="editJoinDate"
+                    value="${data.tenantJoinDate || ""}"
+                >
+
+
+                <!-- RENT -->
+                <label>Monthly Rent</label>
 
                 <input
                     type="number"
@@ -557,6 +601,8 @@ function toggleEditMode() {
                     inputmode="numeric"
                 >
 
+
+                <!-- BUTTONS -->
                 <div class="edit-actions">
 
                     <button onclick="saveFlatEdit()">
