@@ -1041,10 +1041,7 @@ function closeEditBox() {
 // ==========================================
 
 
-// ==========================================
-// START - TENANT INFORMATION
-// ==========================================
-
+```javascript
 function openTenant() {
 
     const flatName =
@@ -1053,27 +1050,21 @@ function openTenant() {
             .textContent
             .trim();
 
-
     const data =
         flatData[flatName];
-
 
     if (!data) {
 
         alert("Flat data not found.");
 
         return;
-
     }
-
 
     const box =
         document.createElement("div");
 
-
     box.id =
         "tenantBox";
-
 
     box.innerHTML = `
 
@@ -1089,88 +1080,79 @@ function openTenant() {
                         ← Back
                     </button>
 
-
                     <h2>
                         Tenant Information
                     </h2>
-
 
                     <span></span>
 
                 </div>
 
-
                 <h3>
                     ${escapeHTML(data.flat)}
                 </h3>
 
+                <div class="tenant-form">
 
-                <label>
-                    Tenant Name
-                </label>
+                    <label>
+                        Tenant Name
+                    </label>
 
-
-                <input
-                    type="text"
-                    id="tenantName"
-                    value="${escapeHTML(data.tenant || "")}"
-                    placeholder="Tenant name"
-                >
-
-
-                <label>
-                    Mobile Number
-                </label>
-
-
-                <input
-                    type="tel"
-                    id="tenantPhone"
-                    value="${escapeHTML(data.tenantPhone || "")}"
-                    placeholder="Mobile number"
-                    inputmode="tel"
-                >
-
-
-                <label>
-                    NID / Identity Card Number
-                </label>
-
-
-                <input
-                    type="text"
-                    id="tenantIdentity"
-                    value="${escapeHTML(data.tenantIdentity || "")}"
-                    placeholder="NID / Passport / Other"
-                >
-
-
-                <label>
-                    Joining Date
-                </label>
-
-
-                <input
-                    type="date"
-                    id="tenantJoinDate"
-                    value="${data.tenantJoinDate || ""}"
-                >
-
-
-                <div class="tenant-actions">
-
-                    <button
-                        onclick="saveTenant()"
+                    <input
+                        type="text"
+                        id="tenantName"
+                        value="${escapeHTML(data.tenant || "")}"
+                        placeholder="Tenant name"
                     >
-                        💾 Save
-                    </button>
 
+                    <label>
+                        Mobile Number
+                    </label>
 
-                    <button
-                        onclick="closeTenant()"
+                    <input
+                        type="tel"
+                        id="tenantPhone"
+                        value="${escapeHTML(data.tenantPhone || "")}"
+                        placeholder="Mobile number"
+                        inputmode="tel"
                     >
-                        ✖ Cancel
-                    </button>
+
+                    <label>
+                        NID / Identity Card Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="tenantIdentity"
+                        value="${escapeHTML(data.tenantIdentity || "")}"
+                        placeholder="NID / Passport / Other"
+                    >
+
+                    <label>
+                        Joining Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="tenantJoinDate"
+                        value="${data.tenantJoinDate || ""}"
+                    >
+
+                    <div class="tenant-buttons">
+
+                        <button
+                            onclick="saveTenant()"
+                        >
+                            💾 Save
+                        </button>
+
+                        <button
+                            onclick="closeTenant()"
+                        >
+                            ✖ Cancel
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -1180,14 +1162,15 @@ function openTenant() {
 
     `;
 
-
     document.body.appendChild(box);
-
 }
+
 
 // ==========================================
 // END - TENANT INFORMATION
 // ==========================================
+```
+
 
 
 
